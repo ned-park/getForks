@@ -31,7 +31,7 @@ const RecipeSchema = new mongoose.Schema({
   },
   repo: {
     type: mongoose.Schema.Types.ObjectId,
-    red: 'Repo',
+    ref: 'Repo',
     required: false
   }
 })
