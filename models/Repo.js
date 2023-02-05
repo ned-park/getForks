@@ -1,5 +1,6 @@
 import mongoose from "mongoose"
-import Recipe from "../models/Recipe"
+import Recipe from "../models/Recipe.js"
+import User from "../models/User.js"
 
 const RepoSchema = new mongoose.Schema({
   title: {
@@ -66,4 +67,5 @@ const RepoSchema = new mongoose.Schema({
   }
 })
 
-export default mongoose.model('Repo', RepoSchema)
+const Repo = mongoose.model('Repo', RepoSchema)
+export default Repo

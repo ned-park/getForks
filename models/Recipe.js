@@ -35,5 +35,5 @@ const RecipeSchema = new mongoose.Schema({
     required: false
   }
 })
-
-export default mongoose.model('Recipe', RecipeSchema)
+const Recipe  = mongoose.model('Recipe', RecipeSchema)
+export default Recipe
