@@ -3,6 +3,7 @@ import express from "express"
 import dotenv from "dotenv"
 import mongoose from "mongoose"
 import mainRoutes from "./routes/main.js"
+import dashboardRoutes from "./routes/dashboard.js"
 
 
 // import session from "express-session"
@@ -46,7 +47,7 @@ app.use('/', mainRoutes)
 // app.use('/search', searchRoutes)
 // app.use('/about', aboutRoutes)
 // app.use('/comment', commentRoutes)
-// app.use('/:user', dashboardRoutes)
+app.use('/:user', dashboardRoutes)
 
 
 // app.listen(PORT, ()=>{
