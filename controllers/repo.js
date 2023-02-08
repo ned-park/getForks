@@ -1,6 +1,7 @@
-// import User from "../models/User"
+import Comment from "../models/Comment.js"
+import Recipe from "../models/Recipe.js"
 import Repo from "../models/Repo.js";
-import User from "../models/User.js"
+import User from "../models/User.js";
 
 const repoController = {
   getIndex: async (req, res) => {
@@ -25,7 +26,7 @@ const repoController = {
           latest: r.latest,
           description: r.description,
           cloudinaryId: r.cloudinaryId,
-          id: r._id,
+          userId: r._id,
           username: r.userId.username,
           image: r.image,
           tags: r.tags,
@@ -40,7 +41,7 @@ const repoController = {
   },
   getUserRepos: async (req, res) => {
     try {
-      let landedAtUser = req.baseUrl.slice(1) || req.user;
+      let landedAtUser = req.params.user;
       let userToDisplay = await User.findOne({ username: landedAtUser })
         .populate({ path: "repos", options: { sort: { creationDate: -1 } } })
         .lean();
@@ -53,25 +54,67 @@ const repoController = {
         username: userToDisplay.username,
         _id: userToDisplay._id || userToDisplay.id,
         repos: userToDisplay.repos.map((repo) => {
-          repo.userId = {
-            ...repo.userId,
-            username: userToDisplay.username,
-          };
+          repo.username = userToDisplay.username
           return repo;
         }),
       };
-      if (userToDisplay) {
-        res.json({
-          repos: userToDisplay.repos,
-          user: req.user,
-          usernamePage: userToDisplay.username,
-        });
-      } else {
-        res.render("dashboard.ejs", { user: null, usernamePage: landedAtUser });
-      }
+      res.json({
+        repos: userToDisplay.repos,
+        user: req.user,
+        usernamePage: userToDisplay.username,
+      });
     } catch (err) {
       console.error(err);
       res.json({ err: `Something went wrong ${err}` });
+    }
+  },
+  getRepo: async (req, res) => {
+    const repo = await Repo.findOne({ _id: req.params.repoId })
+      .populate("versions")
+      .populate("userId")
+      .lean();
+    const comments = await Comment.find({ repoId: req.params.repoId })
+      .populate("userId")
+      .lean();
+    let forkedFrom = null;
+    if (repo.forkedFrom) {
+      forkedFrom = await Repo.findOne({ _id: repo.forkedFrom })
+        .populate("versions")
+        .populate("userId")
+        .lean();
+    }
+    if (repo) {
+      console.log(repo)
+      res.json({
+        user: req.user || null,
+        repo: {
+          title: repo.title,
+          latest: repo.latest,
+          description: repo.description,
+          cloudinaryId: repo.cloudinaryId,
+          userId: repo._id,
+          username: repo.userId.username,
+          image: repo.image,
+          tags: repo.tags,
+          versions: repo.versions.map(r => {
+            r = {...r, recipeId: r._id}
+            delete r._id
+            return r
+          })
+        },
+        username: req.params.user,
+        version: req.query.version || repo.latest,
+        forkedFrom: forkedFrom,
+        comments: comments,
+      });
+    } else {
+      return res
+        .status(404)
+        .json({
+          errors: [
+            { msg: "The repository you are looking for does not exist" },
+          ],
+        });
     }
   },
 };
