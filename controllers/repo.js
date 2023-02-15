@@ -10,27 +10,15 @@ const repoController = {
       page: +req.query.page || 1,
       limit: +req.query.limit || 5,
     };
-    // console.log(page, limit);
     try {
       let repos = await (
         await Repo.find({ forkedFrom: { $exists: false } })
           .limit(limit * 1)
           .skip((page - 1) * limit)
           .sort({ creationDate: -1 })
-          .populate("userId")
+          .populate("userId", '-repos')
       ).filter((repo) => !repo.forkedFrom);
-      res.json({
-        user: null,
-        repos: repos.map((r) => ({
-          title: r.title,
-          latest: r.latest,
-          description: r.description,
-          cloudinaryId: r.cloudinaryId,
-          userId: r._id,
-          username: r.userId.username,
-          image: r.image,
-          tags: r.tags,
-        })),
+      res.json({repos,
         page: page,
         limit: limit,
       });
