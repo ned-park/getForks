@@ -4,6 +4,7 @@ import dotenv from "dotenv"
 import mongoose from "mongoose"
 import mainRoutes from "./routes/main.js"
 import dashboardRoutes from "./routes/dashboard.js"
+import userRoutes from "./routes/user.js"
 
 
 // import session from "express-session"
@@ -47,6 +48,7 @@ app.use('/', mainRoutes)
 // app.use('/search', searchRoutes)
 // app.use('/about', aboutRoutes)
 // app.use('/comment', commentRoutes)
+app.use('/users', userRoutes)
 app.use('/:user', dashboardRoutes)
 
 

@@ -63,9 +63,16 @@ const RepoSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
     required: true
-
   }
 })
+
+RepoSchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString()
+    delete returnedObject._id
+    delete returnedObject.__v
+  }
+});
 
 const Repo = mongoose.model('Repo', RepoSchema)
 export default Repo
