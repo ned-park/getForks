@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken"
 import express from "express"
 const router = express.Router({mergeParams: true})
 import User from "../models/User.js"
@@ -6,22 +7,49 @@ import User from "../models/User.js"
 
 const userController = {
   signUp: async (req, res) => {
-    const { username, name, password } = request.body
+    const { username, password } = req.body
 
     const saltRounds = 10
     const passwordHash = await bcrypt.hash(password, saltRounds)
 
     const user = new User({
       username,
-      name,
-      passwordHash,
+      password: passwordHash,
     })
 
     const savedUser = await user.save()
 
     res.status(201).json(savedUser)
   },
-
+  login: async (req, response) => {
+    console.log("Request body", req.body)
+    const { username, password } = req.body
+  
+    const user = await User.findOne({ username }, 'password')
+    const passwordCorrect = user === null
+      ? false
+      : await bcrypt.compare(password, user.password)
+  
+    if (!(user && passwordCorrect)) {
+      return response.status(401).json({
+        error: 'invalid username or password'
+      })
+    }
+  
+    const userForToken = {
+      username: user.username,
+      id: user._id,
+    }
+  
+    const token = jwt.sign(
+      userForToken, 
+      process.env.SECRET, 
+      { expiresIn: 24*60*60 })
+  
+    response
+      .status(200)
+      .send({ token, username: user.username, name: user.name })
+  },
   getUsers: async (req, res) => {
     const users = await User.find({})
     res.json(users)

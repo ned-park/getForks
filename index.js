@@ -2,6 +2,7 @@
 import express from "express"
 import dotenv from "dotenv"
 import mongoose from "mongoose"
+import bodyParser from "body-parser"
 import mainRoutes from "./routes/main.js"
 import dashboardRoutes from "./routes/dashboard.js"
 import userRoutes from "./routes/user.js"
@@ -43,6 +44,7 @@ try {
 //   })
 // )
 
+app.use(bodyParser.json());
 
 app.use('/', mainRoutes)
 // app.use('/search', searchRoutes)
