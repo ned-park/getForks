@@ -10,29 +10,15 @@ const userController = {
     const { username, password } = req.body
 
     try {
-      const exists = await User.findOne({username})
-
-      if (exists) {
-        throw new Error("Username is taken")
-      }
-
-      const saltRounds = 10
-      const passwordHash = await bcrypt.hash(password, saltRounds)
-
-      const user = new User({
-        username,
-        password: passwordHash,
-      })
-
-      const savedUser = await user.save()
-
+      const savedUser = await User.signup(username, password)
       res.status(201).json(savedUser)
+
     } catch(error) {
       if (error.message == 'Username is taken')
         res.status(422).json({"error": "Username is taken"})
-      else {
+      else 
         res.status(500).json({"error": "Something went wrong"})
-      }
+      
     }
   },
   login: async (req, res) => {
