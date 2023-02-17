@@ -4,6 +4,7 @@ import express from "express"
 const router = express.Router({mergeParams: true})
 import User from "../models/User.js"
 
+const createToken = ({username, id}) => jwt.sign({username, id}, process.env.SECRET, { expiresIn: '1d' })
 
 const userController = {
   signUp: async (req, res) => {
@@ -11,28 +12,44 @@ const userController = {
 
     try {
       const savedUser = await User.signup(username, password)
-      res.status(201).json(savedUser)
+      let userForToken = {
+        id: savedUser._id.toString(),
+        username: savedUser.username
+      }
+
+      const token = createToken(userForToken)
+
+      res
+        .status(201)
+        .json({ token, user: userForToken })
 
     } catch(error) {
       if (error.message == 'Username is taken')
-        res.status(422).json({"error": "Username is taken"})
+        res
+          .status(422)
+          .json({"error": "Username is taken"})
       else 
-        res.status(500).json({"error": "Something went wrong"})
+        res
+          .status(500)
+          .json({"error": "Something went wrong"})
       
     }
   },
   login: async (req, res) => {
     const { username, password } = req.body
   
-    const user = await User.findOne({ username }, 'password')
+    const user = await User.findOne({ username }, '+password')
+    console.log({user})
     const passwordCorrect = user === null
       ? false
       : await bcrypt.compare(password, user.password)
   
     if (!(user && passwordCorrect)) {
-      return res.status(401).json({
-        error: 'invalid username or password'
-      })
+      return res
+        .status(401)
+        .json({
+          error: 'invalid username or password'
+        })
     }
   
     const userForToken = {
@@ -40,14 +57,11 @@ const userController = {
       id: user._id,
     }
   
-    const token = jwt.sign(
-      userForToken, 
-      process.env.SECRET, 
-      { expiresIn: 24*60*60 })
+    const token = createToken(userForToken)
   
     res
       .status(200)
-      .send({ token, username: user.username, name: user.name })
+      .send({ token, user: userForToken })
   },
   getUsers: async (req, res) => {
     const users = await User.find({})

@@ -3,6 +3,21 @@ import Recipe from "../models/Recipe.js"
 import Repo from "../models/Repo.js";
 import User from "../models/User.js";
 
+const getTokenFrom = request => {  
+  const authorization = request.get('authorization')  
+  if (authorization && authorization.startsWith('Bearer ')) {    
+    return authorization.replace('Bearer ', '')  
+  }  
+  return null
+}
+
+// Logged in actions
+// const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
+// if (!decodedToken.id) {    
+//   return response.status(401).json({ error: 'token invalid' })  
+// }  
+// const user = await User.findById(decodedToken.id)
+
 const repoController = {
   getIndex: async (req, res) => {
     console.log(req.query);
