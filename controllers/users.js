@@ -4,64 +4,61 @@ import express from "express"
 const router = express.Router({mergeParams: true})
 import User from "../models/User.js"
 
-const createToken = ({username, id}) => jwt.sign({username, id}, process.env.SECRET, { expiresIn: '1d' })
+const createToken = ({id, username}) => jwt.sign({username, id}, process.env.SECRET, { expiresIn: '1d' })
 
 const userController = {
   signUp: async (req, res) => {
     const { username, password } = req.body
 
     try {
-      const savedUser = await User.signup(username, password)
-      let userForToken = {
-        id: savedUser._id.toString(),
-        username: savedUser.username
-      }
-
-      const token = createToken(userForToken)
+      const user = await User.signup(username, password)
+      const token = createToken(user)
 
       res
         .status(201)
-        .json({ token, user: userForToken })
+        .json({ token, user })
 
     } catch(error) {
-      if (error.message == 'Username is taken')
+      console.error(error)
+      if (error.message == 'Username is taken') {
         res
           .status(422)
-          .json({"error": "Username is taken"})
-      else 
+          .json({ message: error.message })
+      } else {
         res
           .status(500)
-          .json({"error": "Something went wrong"})
+          .json({ message: error.message })
+      }
       
     }
   },
   login: async (req, res) => {
     const { username, password } = req.body
+
+    try {
+      const user = await User.login(username, password)
+      const token = createToken(user)
   
-    const user = await User.findOne({ username }, '+password')
-    console.log({user})
-    const passwordCorrect = user === null
-      ? false
-      : await bcrypt.compare(password, user.password)
-  
-    if (!(user && passwordCorrect)) {
-      return res
-        .status(401)
-        .json({
-          error: 'invalid username or password'
-        })
-    }
-  
-    const userForToken = {
-      username: user.username,
-      id: user._id,
-    }
-  
-    const token = createToken(userForToken)
-  
-    res
-      .status(200)
-      .send({ token, user: userForToken })
+      res
+        .status(200)
+        .send({ token, user: user })
+        
+    } catch(error) {
+      console.error(error.message)
+      if (error.message.includes("Invalid")) {
+        return res
+          .status(401)
+          .json({
+            error: error.message
+          })
+        } else {
+          return res
+            .status(500)
+            .json({
+              error: error.message
+            })
+          }
+      }
   },
   getUsers: async (req, res) => {
     const users = await User.find({})

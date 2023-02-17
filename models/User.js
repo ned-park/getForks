@@ -40,8 +40,29 @@ UserSchema.statics.signup = async function (username, password) {
     password: passwordHash
   });
 
-  return user
+  return {
+    id: user._id.toString(),
+    username: user.username
+  }
+
 };
+
+UserSchema.statics.login = async function(username, password) {
+  const user = await User.findOne({ username }, '+password')
+    console.log({user})
+    if (!user)
+      throw new Error('Invalid username')
+
+    const passwordCorrect = await bcrypt.compare(password, user.password)
+  
+    if (!passwordCorrect) 
+      throw new Error('Invalid password')
+    
+    return {
+      username: user.username,
+      id: user._id.toString()
+    }
+  }
 
 UserSchema.set("toJSON", {
   transform: (document, returnedObject) => {
