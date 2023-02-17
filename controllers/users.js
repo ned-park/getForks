@@ -9,20 +9,33 @@ const userController = {
   signUp: async (req, res) => {
     const { username, password } = req.body
 
-    const saltRounds = 10
-    const passwordHash = await bcrypt.hash(password, saltRounds)
+    try {
+      const exists = await User.findOne({username})
 
-    const user = new User({
-      username,
-      password: passwordHash,
-    })
+      if (exists) {
+        throw new Error("Username is taken")
+      }
 
-    const savedUser = await user.save()
+      const saltRounds = 10
+      const passwordHash = await bcrypt.hash(password, saltRounds)
 
-    res.status(201).json(savedUser)
+      const user = new User({
+        username,
+        password: passwordHash,
+      })
+
+      const savedUser = await user.save()
+
+      res.status(201).json(savedUser)
+    } catch(error) {
+      if (error.message == 'Username is taken')
+        res.status(422).json({"error": "Username is taken"})
+      else {
+        res.status(500).json({"error": "Something went wrong"})
+      }
+    }
   },
-  login: async (req, response) => {
-    console.log("Request body", req.body)
+  login: async (req, res) => {
     const { username, password } = req.body
   
     const user = await User.findOne({ username }, 'password')
@@ -31,7 +44,7 @@ const userController = {
       : await bcrypt.compare(password, user.password)
   
     if (!(user && passwordCorrect)) {
-      return response.status(401).json({
+      return res.status(401).json({
         error: 'invalid username or password'
       })
     }
@@ -46,7 +59,7 @@ const userController = {
       process.env.SECRET, 
       { expiresIn: 24*60*60 })
   
-    response
+    res
       .status(200)
       .send({ token, username: user.username, name: user.name })
   },
