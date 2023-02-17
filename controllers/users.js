@@ -49,13 +49,13 @@ const userController = {
         return res
           .status(401)
           .json({
-            error: error.message
+            message: error.message
           })
         } else {
           return res
             .status(500)
             .json({
-              error: error.message
+              message: error.message
             })
           }
       }

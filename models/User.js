@@ -4,7 +4,6 @@ import mongooseUniqueValidator from "mongoose-unique-validator";
 
 const UserSchema = new mongoose.Schema({
   username: { type: String, unique: true },
-  email: { type: String, required: false },
   password: { type: String, select: false },
   repos: {
     type: [
