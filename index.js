@@ -3,9 +3,11 @@ import express from "express"
 import dotenv from "dotenv"
 import mongoose from "mongoose"
 import bodyParser from "body-parser"
+
 import mainRoutes from "./routes/main.js"
 import dashboardRoutes from "./routes/dashboard.js"
 import userRoutes from "./routes/user.js"
+
 
 
 // import session from "express-session"
@@ -46,12 +48,12 @@ try {
 
 app.use(bodyParser.json());
 
-app.use('/', mainRoutes)
+app.use('/api', mainRoutes)
 // app.use('/search', searchRoutes)
 // app.use('/about', aboutRoutes)
 // app.use('/comment', commentRoutes)
-app.use('/users', userRoutes)
-app.use('/:user', dashboardRoutes)
+app.use('/api/users', userRoutes)
+app.use('/api/:user', dashboardRoutes)
 
 
 // app.listen(PORT, ()=>{
