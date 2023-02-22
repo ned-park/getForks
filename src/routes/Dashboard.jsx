@@ -29,9 +29,12 @@ export default function Dashboard() {
 
   return (
     <main>
-      <h1>Recipes</h1>
-      {repos.map(repo => <RepoCard repo={repo} key={repo.key} />)
-      }
+      <section>
+        <h1>{user && user.user? user.user.username + `'s` : ''} Recipes</h1>
+      </section>
+      <section>
+      {repos.map(repo => <RepoCard repo={repo} key={repo.key} />)}
+      </section>
     </main>
   )
 }
