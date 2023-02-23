@@ -33,7 +33,7 @@ export default function Dashboard() {
         <h1>{user && user.user? user.user.username + `'s` : ''} Recipes</h1>
       </section>
       <section>
-      {repos.map(repo => <RepoCard repo={repo} key={repo.key} />)}
+      {repos.map(repo => <RepoCard repo={repo} key={repo._id} />)}
       </section>
     </main>
   )
