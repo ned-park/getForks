@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react"
+import DOMPurify from "dompurify"
 import { useAuthContext } from "../hooks/useAuthContext"
 import { useParams } from "react-router-dom"
 import Header from "../components/Header"
 
 export default function Recipe() {
   let { recipeId } = useParams();
-  let [recipe, setRecipe] = useState([])
+  let [recipe, setRecipe] = useState(null)
   let [loaded, setLoaded] = useState(false)
 
   const { user, username } = useAuthContext()
@@ -19,9 +20,11 @@ export default function Recipe() {
       })
       .then(res => res.json())
       .then(data => {
-        console.log('data', data)
-        setRecipe(data.repo)
+        console.log({data}, data.repo)
+        setRecipe({...data})
+        return data
       })
+      .then(() => setTimeout(console.log({recipe}), 3000))
     }
 
     if (user && user.user) {
@@ -33,14 +36,25 @@ export default function Recipe() {
   return (
     <>
       <Header />
-      <main>
+      {recipe &&
+      (<main>
         <section>
-          {recipe && <h1>{recipe.title}</h1>}
+          {recipe && <h1>{recipe.repo.title}</h1>}
         </section>
         <section>
-
+          <p>{recipe.repo.description}</p>
+          <p>{recipe.repo.notes}</p>
         </section>
-      </main>
+        <section>
+          <h2>Ingredients</h2>
+          <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(recipe.repo.versions[recipe.repo.latest || 0].ingredients)}}></div>
+        </section>
+        <section>
+          <h2>Instructions</h2>
+          <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(recipe.repo.versions[recipe.repo.latest || 0].instructions)}}></div>
+        </section>
+      </main>)
+      }
     </>
   )
 }
