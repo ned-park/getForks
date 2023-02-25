@@ -8,6 +8,7 @@ export default function Recipe() {
   let { recipeId } = useParams();
   let [recipe, setRecipe] = useState(null)
   let [loaded, setLoaded] = useState(false)
+  let [image, setImage] = useState(null)
 
   const { user, username } = useAuthContext()
   
@@ -22,6 +23,7 @@ export default function Recipe() {
       .then(data => {
         console.log({data}, data.repo)
         setRecipe({...data})
+        setImage([data.repo.image.slice(0,49), data.repo.image.slice(62) ])
         return data
       })
       .then(() => setTimeout(console.log({recipe}), 3000))
@@ -40,6 +42,15 @@ export default function Recipe() {
       (<main>
         <section>
           {recipe && <h1>{recipe.repo.title}</h1>}
+          {image && <img className=""
+    	sizes="(min-width: 30em) 50em, 28em, 100vw"
+    	srcset={`${image[0]}/f_auto,q_70,w_256/${image[1]} 256w,
+    	        ${image[0]}/f_auto,q_70,w_512/${image[1]} 512w,
+    	        ${image[0]}/f_auto,q_70,w_768/${image[1]} 768w,
+    	        ${image[0]}/f_auto,q_70,w_1024/${image[1]} 1024w,
+    	        ${image[0]}/f_auto,q_70,w_1280/${image[1]} 1280w`}
+    	src={`${image[0]}/f_auto,q_70,w_512/${image[1]}`}
+    	alt="User provided image of recipe" />}
         </section>
         <section>
           <p>{recipe.repo.description}</p>
