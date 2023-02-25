@@ -21,12 +21,10 @@ export default function Recipe() {
       })
       .then(res => res.json())
       .then(data => {
-        console.log({data}, data.repo)
         setRecipe({...data})
-        setImage([data.repo.image.slice(0,49), data.repo.image.slice(62) ])
+        setImage(data.repo.image? [data.repo.image.slice(0,49), data.repo.image.slice(62)] : null)
         return data
       })
-      .then(() => setTimeout(console.log({recipe}), 3000))
     }
 
     if (user && user.user) {
