@@ -15,19 +15,20 @@ export default function Navbar() {
   return (
     <nav>
       <ul>
-        <li>
+        {user && user.user && (<li>
           <NavLink
-            to="dashboard"
-            style={({ isActive }) =>
-              isActive ? activeStyle : undefined
+            to={`/${user.user.username}`}
+            className={({ isActive }) =>
+              isActive ? activeClassName : undefined
             }
           >
             myRecipes
           </NavLink>
         </li>
+        )}
         <li>
           <NavLink
-            to="about"
+            to="/about"
             className={({ isActive }) =>
               isActive ? activeClassName : undefined
             }
@@ -38,7 +39,7 @@ export default function Navbar() {
         {!user && (
           <>
             <li>
-              <NavLink to="login">
+              <NavLink to="/login">
                 {({ isActive }) => (
                   <span
                     className={
@@ -51,7 +52,7 @@ export default function Navbar() {
               </NavLink>
             </li>
             <li>
-              <NavLink to="signup">
+              <NavLink to="/signup">
                 {({ isActive }) => (
                   <span
                     className={
