@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { NavLink, Outlet } from "react-router-dom"
 import { useAuthContext } from "../hooks/useAuthContext"
 import RepoCard from "../components/RepoCard"
 
@@ -31,6 +32,12 @@ export default function Dashboard() {
     <main>
       <section>
         <h1>{user && user.user? user.user.username + `'s` : ''} Recipes</h1>
+        {user && user.user && (<NavLink
+            to={`/${user.user.username}/create`}
+          >
+            new recipe
+          </NavLink>
+          )}
       </section>
       <section>
       {repos.map(repo => <RepoCard repo={repo} key={repo._id} />)}
