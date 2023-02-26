@@ -1,17 +1,22 @@
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
-import { useParams } from "react-router-dom";
 import Header from "../components/Header";
 
 export default function NewRecipe() {
   const { user, username } = useAuthContext();
-  console.log(`new recipe page`)
+  const [formData, setFormData] = useState({})
+
+  const handleChange = (e) => {
+    setFormData(oldFormData => ({
+      ...oldFormData,
+      [e.target.name]: e.target.value
+    }))
+  };
 
   const handleClick = (e) => {
     e.preventDefault();
-    const formData = e.target;
-    console.log(formData);
-  };
+
+  }
 
   return (
     <>
@@ -26,6 +31,8 @@ export default function NewRecipe() {
           placeholder="Recipe Title"
           required
           className=""
+          value={formData.title}
+          onChange={handleChange}
         />
         <label htmlFor="description">Description</label>
         <input
@@ -33,6 +40,8 @@ export default function NewRecipe() {
           placeholder="Description (optional)"
           name="description"
           className=""
+          value={formData.description}
+          onChange={handleChange}
         />
         <label htmlFor="notes">Notes</label>
         <input
@@ -40,12 +49,16 @@ export default function NewRecipe() {
           placeholder="Notes (optional)"
           name="notes"
           className=""
+          value={formData.notes}
+          onChange={handleChange}
         />
         <label htmlFor="ingredients">Ingredients</label>
         <textarea
           placeholder="Ingredients"
           name="ingredients"
           id="ingredients"
+          value={formData.ingredients}
+          onChange={handleChange}
         ></textarea>
         <label htmlFor="instructions">Instructions</label>
         <textarea
@@ -54,6 +67,8 @@ export default function NewRecipe() {
           id="instructions"
           required
           className=""
+          value={formData.instructions}
+          onChange={handleChange}
         ></textarea>
         <label htmlFor="tags">Tags</label>
         <input
@@ -61,6 +76,8 @@ export default function NewRecipe() {
           placeholder="Space separated tags"
           name="tags"
           className=""
+          value={formData.tags}
+          onChange={handleChange}
         />
         <div className="">
           <label htmlFor="imgUpload" className="">
@@ -72,6 +89,8 @@ export default function NewRecipe() {
             name="file"
             placeholder=""
             className=""
+            value={formData.file}
+            onChange={handleChange}
           />
         </div>
         <input type="submit" value="Create Recipe" className="" />
