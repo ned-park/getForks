@@ -4,18 +4,50 @@ import Header from "../components/Header";
 
 export default function NewRecipe() {
   const { user, username } = useAuthContext();
-  const [formData, setFormData] = useState({})
+  const [file, setFile] = useState(null)
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    notes: '',
+    ingredients: '',
+    instructions: '',
+    tags: '',
+  })
 
   const handleChange = (e) => {
-    setFormData(oldFormData => ({
-      ...oldFormData,
-      [e.target.name]: e.target.value
-    }))
-  };
+    if (e.target.name === 'file') {
+      setFile(e.target.files[0])
+    } else {
+      setFormData(oldFormData => ({
+        ...oldFormData,
+        [e.target.name]: e.target.value
+      }))
+    }
+  }
 
   const handleClick = (e) => {
     e.preventDefault();
+    console.log(formData)
+    const data = new FormData()
+    for (let name in formData) {
+      data.append(name, formData[name])
+    }
+    if (file) {
+      data.append('file', file)
+    }
 
+    fetch(`/api/${username}/create`, {
+      method: 'post',
+      headers: {
+      // 'Content-Type': 'multipart/form-data',
+      'Authorization': `Bearer ${user.token}`,
+      },
+      body: data,
+    }).then(res => {
+        let data = res.json()
+        console.log(data)
+      })
+      .catch(error => console.log(error))
   }
 
   return (
@@ -89,7 +121,6 @@ export default function NewRecipe() {
             name="file"
             placeholder=""
             className=""
-            value={formData.file}
             onChange={handleChange}
           />
         </div>
