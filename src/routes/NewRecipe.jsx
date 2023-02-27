@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
 import Header from "../components/Header";
 
 export default function NewRecipe() {
+  const navigate = useNavigate()
   const { user, username } = useAuthContext();
   const [file, setFile] = useState(null)
   const [formData, setFormData] = useState({
@@ -27,7 +29,6 @@ export default function NewRecipe() {
 
   const handleClick = (e) => {
     e.preventDefault();
-    console.log(formData)
     const data = new FormData()
     for (let name in formData) {
       data.append(name, formData[name])
@@ -39,15 +40,17 @@ export default function NewRecipe() {
     fetch(`/api/${username}/create`, {
       method: 'post',
       headers: {
-      // 'Content-Type': 'multipart/form-data',
       'Authorization': `Bearer ${user.token}`,
       },
       body: data,
     }).then(res => {
-        let data = res.json()
-        console.log(data)
+        if (res.ok) {
+          navigate(`/${username}`)
+        }
       })
-      .catch(error => console.log(error))
+      .catch(error => {
+        console.log(error)
+      })
   }
 
   return (
