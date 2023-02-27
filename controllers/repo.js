@@ -3,6 +3,7 @@ import Recipe from "../models/Recipe.js"
 import Repo from "../models/Repo.js";
 import User from "../models/User.js";
 import express from "express"
+import cloudinary from "../middleware/cloudinary.js";
 const router = express.Router({mergeParams: true})
 
 const getTokenFrom = request => {  
@@ -125,14 +126,10 @@ const repoController = {
   },
   createNewRepo: async (req, res) => {
     try {
-        console.log(`in right method`)
         const user = await User.findOne({ username: req.params.user })
-        // let image
-        // console.log({user})
-        // console.log('req.body', req.body)
-        // console.log(req.file)
-        // console.log('formdata', req.formData)
-        // if (req.file) image = await cloudinary.uploader.upload(req.file.path);
+        let image
+        if (req.file) 
+          image = await cloudinary.uploader.upload(req.file.path)
         const newRecipe = new Recipe({
             title: req.body.title,
             notes: req.body.notes || '',
@@ -152,15 +149,16 @@ const repoController = {
         })
 
         newRecipe.repo = newRepo._id
-        // const savedRecipe = await newRecipe.save()
-        // const savedRepo = await newRepo.save()
+        const savedRecipe = await newRecipe.save()
+        const savedRepo = await newRepo.save()
 
-        // user.repos = user.repos.concat(savedRepo._id)
-        // await user.save()
+        user.repos = user.repos.concat(savedRepo._id)
+        await user.save()
 
         res.status(200).json({message: 'Success'})
     } catch (err) {
-        res.status(500).json({message: 'something went wrong'})
+      console.log(err)
+        res.status(500).json({message: 'Something went wrong'})
     }
 },
 };
