@@ -2,6 +2,8 @@ import Comment from "../models/Comment.js"
 import Recipe from "../models/Recipe.js"
 import Repo from "../models/Repo.js";
 import User from "../models/User.js";
+import express from "express"
+const router = express.Router({mergeParams: true})
 
 const getTokenFrom = request => {  
   const authorization = request.get('authorization')  
@@ -43,9 +45,10 @@ const repoController = {
     }
   },
   getUserRepos: async (req, res) => {
+    console.log(req.params)
     try {
       let landedAtUser = req.params.user;
-      let userToDisplay = await User.findOne({ username: landedAtUser })
+      let userToDisplay = await User.findOne({ username: req.params.user })
         .populate({ path: "repos", options: { sort: { creationDate: -1 } } })
         .lean();
 
@@ -88,7 +91,7 @@ const repoController = {
     }
     if (repo) {
       console.log(repo)
-      res.json({
+      res.status(200).json({
         user: req.user || null,
         repo: {
           title: repo.title,
@@ -120,5 +123,45 @@ const repoController = {
         });
     }
   },
+  createNewRepo: async (req, res) => {
+    try {
+        console.log(`in right method`)
+        const user = await User.findOne({ username: req.params.user })
+        // let image
+        // console.log({user})
+        // console.log('req.body', req.body)
+        // console.log(req.file)
+        // console.log('formdata', req.formData)
+        // if (req.file) image = await cloudinary.uploader.upload(req.file.path);
+        const newRecipe = new Recipe({
+            title: req.body.title,
+            notes: req.body.notes || '',
+            instructions: [req.body.instructions],
+            ingredients: [req.body.ingredients.replace(/<ol>/g, '<ol class="list-decimal">')],
+            userId: req.user.id
+        })
+
+        const newRepo = new Repo({
+            title: req.body.title,
+            description: req.body.description,
+            userId: req.user.id,
+            image: image ? image.secure_url : null,
+            cloudinaryId: image ? image.public_id : null,
+            versions: [newRecipe._id],
+            tags: req.body.tags.length > 0 ? req.body.tags.split(' ') : [],
+        })
+
+        newRecipe.repo = newRepo._id
+        // const savedRecipe = await newRecipe.save()
+        // const savedRepo = await newRepo.save()
+
+        // user.repos = user.repos.concat(savedRepo._id)
+        // await user.save()
+
+        res.status(200).json({message: 'Success'})
+    } catch (err) {
+        res.status(500).json({message: 'something went wrong'})
+    }
+},
 };
 export default repoController;

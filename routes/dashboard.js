@@ -1,9 +1,13 @@
 import express from "express"
 const router = express.Router({mergeParams: true})
 import repoController from "../controllers/repo.js"
-// const { ensureAuth, ensureGuest } = require('../middleware/auth')
+import { requireAuth } from "../middleware/requireAuth.js"
+import { upload } from "../middleware/multer.js"
+
+router.use(requireAuth)
 
 router.get('/', repoController.getUserRepos)
 router.get('/:repoId', repoController.getRepo)
+router.post('/create', upload.single("file"), repoController.createNewRepo)
 
 export default router
