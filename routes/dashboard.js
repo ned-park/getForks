@@ -9,5 +9,6 @@ router.use(requireAuth)
 router.get('/', repoController.getUserRepos)
 router.get('/:repoId', repoController.getRepo)
 router.post('/create', upload.single("file"), repoController.createNewRepo)
+router.delete('/:repoId', repoController.deleteRecipe)
 
 export default router

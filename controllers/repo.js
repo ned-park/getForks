@@ -23,7 +23,6 @@ const getTokenFrom = request => {
 
 const repoController = {
   getIndex: async (req, res) => {
-    console.log(req.query);
     const { page, limit } = {
       page: +req.query.page || 1,
       limit: +req.query.limit || 5,
@@ -46,7 +45,6 @@ const repoController = {
     }
   },
   getUserRepos: async (req, res) => {
-    console.log(req.params)
     try {
       let landedAtUser = req.params.user;
       let userToDisplay = await User.findOne({ username: req.params.user })
@@ -91,7 +89,6 @@ const repoController = {
         .lean();
     }
     if (repo) {
-      console.log(repo)
       res.status(200).json({
         user: req.user || null,
         repo: {
@@ -157,9 +154,32 @@ const repoController = {
 
         res.status(200).json({message: 'Success'})
     } catch (err) {
-      console.log(err)
+      console.error(err)
         res.status(500).json({message: 'Something went wrong'})
     }
-},
+  },
+  deleteRecipe: async (req, res) => {
+    if (req.user.username !== req.params.user)
+        return res.status(401).json({ message: 'You do not have permission to delete this repository' })
+    try {
+        let repo = await Repo.findById({ _id: req.params.repoId });
+        if (repo.cloudinaryId != null) {
+            await cloudinary.uploader.destroy(repo.cloudinaryId);
+        }
+        await User.findOneAndUpdate(
+            { _id: req.user._id },
+            { $pull: { repos: req.params.repoId } },
+            { new: true }
+        )
+        await Recipe.deleteMany({ repo: req.params.repoId })
+        await Comment.deleteMany({ repoId: req.params.repoId })
+        await Repo.findOneAndDelete({ _id: req.params.repoId })
+
+        res.status(202).json({message: "Repository was removed"})
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({message: "An error occured during deletion"})
+    }
+  }
 };
 export default repoController;
