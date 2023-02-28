@@ -1,30 +1,30 @@
-import { NavLink } from "react-router-dom"
-import { useLogout } from "../hooks/useLogout"
-import { useAuthContext } from "../hooks/useAuthContext"
-
+import { NavLink } from "react-router-dom";
+import { useLogout } from "../hooks/useLogout";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 export default function Navbar() {
-  const {user} = useAuthContext()
-  const {logout} = useLogout()
-  let activeClassName = "underline"
+  const { user } = useAuthContext();
+  const { logout } = useLogout();
+  let activeClassName = "underline";
 
   const handleClick = () => {
-    logout()
-  }
+    logout();
+  };
 
   return (
     <nav>
       <ul>
-        {user && user.user && (<li>
-          <NavLink
-            to={`/${user.user.username}`}
-            className={({ isActive }) =>
-              isActive ? activeClassName : undefined
-            }
-          >
-            myRecipes
-          </NavLink>
-        </li>
+        {user && user.user && (
+          <li>
+            <NavLink
+              to={`/${user.user.username}`}
+              className={({ isActive }) =>
+                isActive ? activeClassName : undefined
+              }
+            >
+              myRecipes
+            </NavLink>
+          </li>
         )}
         <li>
           <NavLink
@@ -41,11 +41,7 @@ export default function Navbar() {
             <li>
               <NavLink to="/login">
                 {({ isActive }) => (
-                  <span
-                    className={
-                      isActive ? activeClassName : undefined
-                    }
-                  >
+                  <span className={isActive ? activeClassName : undefined}>
                     Login
                   </span>
                 )}
@@ -54,11 +50,7 @@ export default function Navbar() {
             <li>
               <NavLink to="/signup">
                 {({ isActive }) => (
-                  <span
-                    className={
-                      isActive ? activeClassName : undefined
-                    }
-                  >
+                  <span className={isActive ? activeClassName : undefined}>
                     Signup
                   </span>
                 )}
@@ -72,7 +64,6 @@ export default function Navbar() {
           </li>
         )}
       </ul>
-      
     </nav>
-  )
+  );
 }
