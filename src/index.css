@@ -5,7 +5,7 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  /* color: rgba(255, 255, 255, 0.87); */
+  color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
 
   font-synthesis: none;
@@ -16,10 +16,10 @@
 }
 
 @media (prefers-color-scheme: light) {
-  :root {
-    /* color: #213547;
-    background-color: #ffffff; */
-  }
+  /* :root { 
+     color: #213547;
+     background-color: #ffffff; 
+   } */
   a:hover {
     color: #747bff;
   }
@@ -72,4 +72,25 @@ a {
 
 .underline {
   text-decoration: underline;
+}
+
+.btn {
+  box-sizing:border-box;
+  display: inline-flex;
+  align-items: center;
+  font-weight: bold;
+  border-radius: 5px;
+  background: gray;;
+  color: black;
+  padding: 8px 15px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: lightgray;
+}
+
+.btn:active {
+  box-shadow: inset 2px 1px 2px #444;
+  border: none;
 }
