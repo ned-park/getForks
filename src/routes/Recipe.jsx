@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import DOMPurify from "dompurify";
 import { useAuthContext } from "../hooks/useAuthContext";
-import { useParams, useNavigate } from "react-router-dom";
+import { NavLink, Outlet, useParams, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
+import EditRecipe from "./EditRecipe";
 
 export default function Recipe() {
-  let { recipeId } = useParams();
-  let [recipe, setRecipe] = useState(null);
-  let [loaded, setLoaded] = useState(false);
-  let [image, setImage] = useState(null);
-  let [confirm, setConfirm] = useState(false);
+  const { recipeId } = useParams();
+  const [recipe, setRecipe] = useState(null);
+  const [image, setImage] = useState(null);
+  const [confirm, setConfirm] = useState(false);
+  const [editing, setEditing] = useState(false);
 
   const { user, username } = useAuthContext();
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ export default function Recipe() {
   }, [user]);
 
   const handleDelete = (e) => {
-    setConfirm(false)
+    setConfirm(false);
     fetch(`/api/${username}/${recipeId}`, {
       method: "delete",
       headers: {
@@ -55,22 +56,33 @@ export default function Recipe() {
     <>
       <Header />
       {username && !confirm && (
-        <span onClick={() => setConfirm(true)} className="btn">
-          delete
-        </span>
+        <button onClick={() => setConfirm(true)} className="btn">
+          Delete
+        </button>
       )}
       {username && confirm && (
         <span>
           Are you sure?{" "}
-          <span onClick={handleDelete} style={{ cursor: "pointer" }}>
+          <button onClick={handleDelete} style={{ cursor: "pointer" }}>
             yes{" "}
-          </span>
-          <span onClick={() => setConfirm(false)} style={{ cursor: "pointer" }}>
+          </button>
+          <button
+            onClick={() => setConfirm(false)}
+            style={{ cursor: "pointer" }}
+          >
             no{" "}
-          </span>
+          </button>
         </span>
       )}
-      {recipe && (
+      {user && user.user && (
+        <button
+          onClick={() => setEditing((oldEditing) => !oldEditing)}
+          className="btn"
+        >
+          {!editing ? `Edit Recipe` : `Discard Changes`}
+        </button>
+      )}
+      {recipe && !editing && (
         <main>
           <section>
             {recipe && <h1>{recipe.repo.title}</h1>}
@@ -84,7 +96,7 @@ export default function Recipe() {
     	        ${image[0]}/f_auto,q_70,w_1024/${image[1]} 1024w,
     	        ${image[0]}/f_auto,q_70,w_1280/${image[1]} 1280w`}
                 src={`${image[0]}/f_auto,q_70,w_512/${image[1]}`}
-                alt="User provided image of recipe"
+                alt={`User provided image of ${recipe.repo.title}`}
               />
             )}
           </section>
@@ -113,6 +125,9 @@ export default function Recipe() {
             ></div>
           </section>
         </main>
+      )}
+      {recipe && editing && (
+        <EditRecipe data={recipe} stopEditing={() => setEditing(false)} />
       )}
     </>
   );
