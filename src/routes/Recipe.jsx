@@ -38,7 +38,7 @@ export default function Recipe() {
     }
   }, [user]);
 
-  const handleClick = (e) => {
+  const handleDelete = (e) => {
     setConfirm(false)
     fetch(`/api/${username}/${recipeId}`, {
       method: "delete",
@@ -62,7 +62,7 @@ export default function Recipe() {
       {username && confirm && (
         <span>
           Are you sure?{" "}
-          <span onClick={handleClick} style={{ cursor: "pointer" }}>
+          <span onClick={handleDelete} style={{ cursor: "pointer" }}>
             yes{" "}
           </span>
           <span onClick={() => setConfirm(false)} style={{ cursor: "pointer" }}>
