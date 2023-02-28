@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import DOMPurify from "dompurify"
 import { useAuthContext } from "../hooks/useAuthContext"
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 import Header from "../components/Header"
 
 export default function Recipe() {
@@ -11,7 +11,8 @@ export default function Recipe() {
   let [image, setImage] = useState(null)
 
   const { user, username } = useAuthContext()
-  
+  const navigate = useNavigate()
+
   useEffect(() => {
     const fetchRecipe = () => {
       fetch(`/api/${username}/${recipeId}`, {
@@ -32,17 +33,30 @@ export default function Recipe() {
     }
   }, [user])
 
+  const handleClick = (e) => {
+
+    fetch(`/api/${username}/${recipeId}`, {
+      method: 'delete',
+      headers: {
+        'Authorization': `Bearer ${user.token}`
+      }
+    }).then(res => {
+        console.log(res.json())
+        navigate(`/${username}`)
+    })
+  }
 
   return (
     <>
       <Header />
+      {username && <span onClick={handleClick} style={{"cursor": "pointer"}}>delete</span>}
       {recipe &&
       (<main>
         <section>
           {recipe && <h1>{recipe.repo.title}</h1>}
           {image && <img className=""
     	sizes="(min-width: 30em) 50em, 28em, 100vw"
-    	srcset={`${image[0]}/f_auto,q_70,w_256/${image[1]} 256w,
+    	srcSet={`${image[0]}/f_auto,q_70,w_256/${image[1]} 256w,
     	        ${image[0]}/f_auto,q_70,w_512/${image[1]} 512w,
     	        ${image[0]}/f_auto,q_70,w_768/${image[1]} 768w,
     	        ${image[0]}/f_auto,q_70,w_1024/${image[1]} 1024w,
