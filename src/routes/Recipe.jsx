@@ -55,12 +55,11 @@ export default function Recipe() {
   return (
     <>
       <Header />
-      {username && !confirm && (
+      {username && username == user.user.username && !confirm ? (
         <button onClick={() => setConfirm(true)} className="btn">
           Delete
         </button>
-      )}
-      {username && confirm && (
+      ) : (
         <span>
           Are you sure?{" "}
           <button onClick={handleDelete} style={{ cursor: "pointer" }}>
@@ -74,7 +73,7 @@ export default function Recipe() {
           </button>
         </span>
       )}
-      {user && user.user && (
+      {user && user.user && username == user.user.username && (
         <button
           onClick={() => setEditing((oldEditing) => !oldEditing)}
           className="btn"
@@ -127,7 +126,7 @@ export default function Recipe() {
         </main>
       )}
       {recipe && editing && (
-        <EditRecipe data={recipe} stopEditing={() => setEditing(false)} />
+        <EditRecipe recipeData={recipe} stopEditing={() => setEditing(false)} />
       )}
     </>
   );
