@@ -2,17 +2,19 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
 
-export default function EditRecipe({ data, stopEditing }) {
+export default function EditRecipe({ recipeData, stopEditing }) {
   const { userId, recipeId } = useParams;
   const { user, username } = useAuthContext();
   const [file, setFile] = useState(null);
   const [formData, setFormData] = useState({
-    title: data.repo.title,
-    description: data.repo.description,
-    notes: data.repo.notes,
-    ingredients: data.repo.versions[data.repo.latest || 0].ingredients,
-    instructions: data.repo.versions[data.repo.latest || 0].instructions,
-    tags: data.repo.tags,
+    title: recipeData.repo.title,
+    description: recipeData.repo.description,
+    notes: recipeData.repo.notes,
+    ingredients:
+      recipeData.repo.versions[recipeData.repo.latest || 0].ingredients,
+    instructions:
+      recipeData.repo.versions[recipeData.repo.latest || 0].instructions,
+    tags: recipeData.repo.tags,
   });
 
   const handleChange = (e) => {
@@ -37,8 +39,8 @@ export default function EditRecipe({ data, stopEditing }) {
       data.append("file", file);
     }
 
-    fetch(`/api/${username}/create`, {
-      method: "post",
+    fetch(`/api/${username}/${recipeId}`, {
+      method: "put",
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
@@ -46,7 +48,7 @@ export default function EditRecipe({ data, stopEditing }) {
     })
       .then((res) => {
         if (res.ok) {
-          navigate(`/${username}`);
+          navigate(`/${username}/${recipeId}`);
         }
       })
       .catch((error) => {
