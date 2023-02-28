@@ -49,7 +49,7 @@ export default function Recipe() {
   return (
     <>
       <Header />
-      {username && <span onClick={handleClick} style={{"cursor": "pointer"}}>delete</span>}
+      {username && <span onClick={handleClick} className="btn">delete</span>}
       {recipe &&
       (<main>
         <section>

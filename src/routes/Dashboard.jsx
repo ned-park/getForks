@@ -34,8 +34,9 @@ export default function Dashboard() {
         <h1>{user && user.user? user.user.username + `'s` : ''} Recipes</h1>
         {user && user.user && (<NavLink
             to={`/${user.user.username}/create`}
+            className="btn"
           >
-            new recipe
+            New Recipe
           </NavLink>
           )}
       </section>
