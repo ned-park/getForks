@@ -1,7 +1,3 @@
 export default function Index() {
-  return (
-    <p>
-      Hello World from routes/Index.jsx
-    </p>
-  );
+  return <p>Hello World from routes/Index.jsx</p>;
 }

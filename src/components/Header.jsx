@@ -6,7 +6,7 @@ export default function Header() {
       <div className="container flex">
         <span>getForks</span>
         <Navbar />
-        </div>
+      </div>
     </header>
-  )
+  );
 }
