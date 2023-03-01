@@ -100,8 +100,18 @@ export default function Recipe() {
             )}
           </section>
           <section>
-            <p>{recipe.repo.description}</p>
-            <p>{recipe.repo.notes}</p>
+            {recipe.repo.description.length && (
+              <>
+                <h2>Description</h2>
+                <p>{recipe.repo.description}</p>
+              </>
+            )}
+            {recipe.repo.versions[recipe.repo.latest || 0].notes.length && (
+              <>
+                <h2>Notes</h2>
+                <p>{recipe.repo.versions[recipe.repo.latest || 0].notes}</p>
+              </>
+            )}
           </section>
           <section>
             <h2>Ingredients</h2>
