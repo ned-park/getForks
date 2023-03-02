@@ -1,24 +1,24 @@
-import Comment from "../models/Comment.js"
-import Recipe from "../models/Recipe.js"
+import Comment from "../models/Comment.js";
+import Recipe from "../models/Recipe.js";
 import Repo from "../models/Repo.js";
 import User from "../models/User.js";
-import express from "express"
+import express from "express";
 import cloudinary from "../middleware/cloudinary.js";
-const router = express.Router({mergeParams: true})
+const router = express.Router({ mergeParams: true });
 
-const getTokenFrom = request => {  
-  const authorization = request.get('authorization')  
-  if (authorization && authorization.startsWith('Bearer ')) {    
-    return authorization.replace('Bearer ', '')  
-  }  
-  return null
-}
+const getTokenFrom = (request) => {
+  const authorization = request.get("authorization");
+  if (authorization && authorization.startsWith("Bearer ")) {
+    return authorization.replace("Bearer ", "");
+  }
+  return null;
+};
 
 // Logged in actions
 // const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
-// if (!decodedToken.id) {    
-//   return response.status(401).json({ error: 'token invalid' })  
-// }  
+// if (!decodedToken.id) {
+//   return response.status(401).json({ error: 'token invalid' })
+// }
 // const user = await User.findById(decodedToken.id)
 
 const repoController = {
@@ -33,12 +33,9 @@ const repoController = {
           .limit(limit * 1)
           .skip((page - 1) * limit)
           .sort({ creationDate: -1 })
-          .populate("userId", '-repos')
+          .populate("userId", "-repos")
       ).filter((repo) => !repo.forkedFrom);
-      res.json({repos,
-        page: page,
-        limit: limit,
-      });
+      res.json({ repos, page: page, limit: limit });
     } catch (err) {
       console.error(err);
       res.json({ err: `Something went wrong ${err}` });
@@ -59,7 +56,7 @@ const repoController = {
         username: userToDisplay.username,
         _id: userToDisplay._id || userToDisplay.id,
         repos: userToDisplay.repos.map((repo) => {
-          repo.username = userToDisplay.username
+          repo.username = userToDisplay.username;
           return repo;
         }),
       };
@@ -100,11 +97,11 @@ const repoController = {
           username: repo.userId.username,
           image: repo.image,
           tags: repo.tags,
-          versions: repo.versions.map(r => {
-            r = {...r, recipeId: r._id}
-            delete r._id
-            return r
-          })
+          versions: repo.versions.map((r) => {
+            r = { ...r, recipeId: r._id };
+            delete r._id;
+            return r;
+          }),
         },
         username: req.params.user,
         version: req.query.version || repo.latest,
@@ -112,74 +109,105 @@ const repoController = {
         comments: comments,
       });
     } else {
-      return res
-        .status(404)
-        .json({
-          errors: [
-            { msg: "The repository you are looking for does not exist" },
-          ],
-        });
+      return res.status(404).json({
+        errors: [{ msg: "The repository you are looking for does not exist" }],
+      });
     }
   },
   createNewRepo: async (req, res) => {
     try {
-        const user = await User.findOne({ username: req.params.user })
-        let image
-        if (req.file) 
-          image = await cloudinary.uploader.upload(req.file.path)
-        const newRecipe = new Recipe({
-            title: req.body.title,
-            notes: req.body.notes || '',
-            instructions: [req.body.instructions],
-            ingredients: [req.body.ingredients.replace(/<ol>/g, '<ol class="list-decimal">')],
-            userId: req.user.id
-        })
+      const user = await User.findOne({ username: req.params.user });
+      let image;
+      if (req.file) image = await cloudinary.uploader.upload(req.file.path);
+      const newRecipe = new Recipe({
+        title: req.body.title,
+        notes: req.body.notes || "",
+        instructions: [req.body.instructions],
+        ingredients: [
+          req.body.ingredients.replace(/<ol>/g, '<ol class="list-decimal">'),
+        ],
+        userId: req.user.id,
+      });
 
-        const newRepo = new Repo({
-            title: req.body.title,
-            description: req.body.description,
-            userId: req.user.id,
-            image: image ? image.secure_url : null,
-            cloudinaryId: image ? image.public_id : null,
-            versions: [newRecipe._id],
-            tags: req.body.tags.length > 0 ? req.body.tags.split(' ') : [],
-        })
+      const newRepo = new Repo({
+        title: req.body.title,
+        description: req.body.description,
+        userId: req.user.id,
+        image: image ? image.secure_url : null,
+        cloudinaryId: image ? image.public_id : null,
+        versions: [newRecipe._id],
+        tags: req.body.tags.length > 0 ? req.body.tags.split(" ") : [],
+      });
 
-        newRecipe.repo = newRepo._id
-        const savedRecipe = await newRecipe.save()
-        const savedRepo = await newRepo.save()
+      newRecipe.repo = newRepo._id;
+      const savedRecipe = await newRecipe.save();
+      const savedRepo = await newRepo.save();
 
-        user.repos = user.repos.concat(savedRepo._id)
-        await user.save()
+      user.repos = user.repos.concat(savedRepo._id);
+      await user.save();
 
-        res.status(200).json({message: 'Success'})
+      res.status(200).json({ message: "Success" });
     } catch (err) {
-      console.error(err)
-        res.status(500).json({message: 'Something went wrong'})
+      console.error(err);
+      res.status(500).json({ message: "Something went wrong" });
     }
   },
   deleteRecipe: async (req, res) => {
     if (req.user.username !== req.params.user)
-        return res.status(401).json({ message: 'You do not have permission to delete this repository' })
+      return res.status(401).json({
+        message: "You do not have permission to delete this repository",
+      });
     try {
-        let repo = await Repo.findById({ _id: req.params.repoId });
-        if (repo.cloudinaryId != null) {
-            await cloudinary.uploader.destroy(repo.cloudinaryId);
-        }
-        await User.findOneAndUpdate(
-            { _id: req.user._id },
-            { $pull: { repos: req.params.repoId } },
-            { new: true }
-        )
-        await Recipe.deleteMany({ repo: req.params.repoId })
-        await Comment.deleteMany({ repoId: req.params.repoId })
-        await Repo.findOneAndDelete({ _id: req.params.repoId })
+      let repo = await Repo.findById({ _id: req.params.repoId });
+      if (repo.cloudinaryId != null) {
+        await cloudinary.uploader.destroy(repo.cloudinaryId);
+      }
+      await User.findOneAndUpdate(
+        { _id: req.user._id },
+        { $pull: { repos: req.params.repoId } },
+        { new: true }
+      );
+      await Recipe.deleteMany({ repo: req.params.repoId });
+      await Comment.deleteMany({ repoId: req.params.repoId });
+      await Repo.findOneAndDelete({ _id: req.params.repoId });
 
-        res.status(202).json({message: "Repository was removed"})
+      res.status(202).json({ message: "Repository was removed" });
     } catch (err) {
-        console.error(err)
-        res.status(500).json({message: "An error occured during deletion"})
+      console.error(err);
+      res.status(500).json({ message: "An error occured during deletion" });
     }
-  }
+  },
+  commitRecipe: async (req, res) => {
+    try {
+      console.log(`commit recipe file`, req.file);
+      console.log(`commit recipe body`, req.body);
+
+      //   const currentRepo = await Repo.findOne({ _id: req.body.repoId });
+      //   const newRecipe = new Recipe({
+      //     title: req.body.title,
+      //     notes: req.body.notes,
+      //     ingredients: [req.body.ingredients],
+      //     instructions: [req.body.instructions],
+      //     userId: req.user.id,
+      //     repo: req.body.repoId,
+      //   });
+
+      //   // console.log(currentRepo)
+      //   const savedRecipe = await newRecipe.save();
+      //   await Repo.findOneAndUpdate(
+      //     { _id: req.body.repoId },
+      //     {
+      //       // description: req.body.description,
+      //       latest: currentRepo.latest + 1,
+      //       $push: { versions: savedRecipe._id },
+      //     }
+      //   );
+      //   console.log("Recipe updated");
+      //   res.redirect(`/${req.user.username}/${req.body.repoId}`);
+      res.status(200);
+    } catch (err) {
+      console.log(err);
+    }
+  },
 };
 export default repoController;
