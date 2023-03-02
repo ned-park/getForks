@@ -1,4 +1,4 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
 
 const RecipeSchema = new mongoose.Schema({
   title: {
@@ -8,32 +8,32 @@ const RecipeSchema = new mongoose.Schema({
   notes: {
     type: String,
     required: false,
-    default: ''
+    default: "",
   },
   ingredients: {
     type: [String],
     required: true,
-    index: true
+    index: true,
   },
   instructions: {
     type: [String],
-    required: true
-  }, 
+    required: true,
+  },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    ref: "User",
+    required: true,
   },
   clonedFrom: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: false
+    ref: "User",
+    required: false,
   },
   repo: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Repo',
-    required: false
-  }
-})
-const Recipe  = mongoose.model('Recipe', RecipeSchema)
-export default Recipe
+    ref: "Repo",
+    required: false,
+  },
+});
+const Recipe = mongoose.model("Recipe", RecipeSchema);
+export default Recipe;

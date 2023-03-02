@@ -1,9 +1,8 @@
-import express from "express"
-const router = express.Router({mergeParams: true})
-import userController from "../controllers/users.js"
+import express from "express";
+const router = express.Router({ mergeParams: true });
+import userController from "../controllers/users.js";
 // const { ensureAuth, ensureGuest } = require('../middleware/auth')
 
-router.get('/', userController.getUsers)
+router.get("/", userController.getUsers);
 
-
-export default router
+export default router;
