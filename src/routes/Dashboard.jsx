@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
 import RepoCard from "../components/RepoCard";
 
