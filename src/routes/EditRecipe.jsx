@@ -9,7 +9,7 @@ export default function EditRecipe({ recipeData, stopEditing }) {
   const [formData, setFormData] = useState({
     title: recipeData.repo.title,
     description: recipeData.repo.description,
-    notes: recipeData.repo.notes,
+    notes: recipeData.repo.versions[recipeData.repo.latest || 0].notes,
     ingredients:
       recipeData.repo.versions[recipeData.repo.latest || 0].ingredients,
     instructions:
