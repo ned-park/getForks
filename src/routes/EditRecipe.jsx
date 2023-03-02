@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
 
 export default function EditRecipe({ recipeData, stopEditing }) {
-  const { userId, recipeId } = useParams;
+  const { recipeId } = useParams();
   const { user, username } = useAuthContext();
   const [file, setFile] = useState(null);
   const [formData, setFormData] = useState({
@@ -39,6 +39,8 @@ export default function EditRecipe({ recipeData, stopEditing }) {
       data.append("file", file);
     }
 
+    console.log({ data });
+    console.log(`/api/${username}/${recipeId}`);
     fetch(`/api/${username}/${recipeId}`, {
       method: "put",
       headers: {
