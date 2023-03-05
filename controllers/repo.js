@@ -196,9 +196,8 @@ const repoController = {
         repo: req.params.repoId,
       });
 
-      console.log(currentRepo);
       const savedRecipe = await newRecipe.save();
-      await Repo.findOneAndUpdate(
+      let savedRepo = await Repo.findOneAndUpdate(
         { _id: req.params.repoId },
         {
           title: req.body.title,
@@ -207,10 +206,11 @@ const repoController = {
           $push: { versions: savedRecipe._id },
           image: image ? image.secure_url : currentRepo.image,
           cloudinaryId: image ? image.public_id : currentRepo.cloudinaryId,
-        }
+        },
+        { new: true, populate: ["versions", "userId"] }
       );
 
-      res.status(200).json({ message: "successfully updated recipe" });
+      res.status(200).json(savedRepo);
     } catch (err) {
       console.error(err);
       res.status(500).json({ message: "Something went wrong" });
