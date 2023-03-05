@@ -183,6 +183,9 @@ const repoController = {
         message: "You do not have permission to modify this repository",
       });
     try {
+      let image;
+      if (req.file) image = await cloudinary.uploader.upload(req.file.path);
+
       const currentRepo = await Repo.findOne({ _id: req.params.repoId });
       const newRecipe = new Recipe({
         title: req.body.title,
@@ -202,6 +205,8 @@ const repoController = {
           description: req.body.description,
           latest: currentRepo.latest + 1,
           $push: { versions: savedRecipe._id },
+          image: image ? image.secure_url : currentRepo.image,
+          cloudinaryId: image ? image.public_id : currentRepo.cloudinaryId,
         }
       );
 
