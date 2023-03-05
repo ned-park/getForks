@@ -178,35 +178,37 @@ const repoController = {
     }
   },
   commitRecipe: async (req, res) => {
+    if (req.user.username !== req.params.user)
+      return res.status(401).json({
+        message: "You do not have permission to modify this repository",
+      });
     try {
-      console.log(`commit recipe file`, req.file);
-      console.log(`commit recipe body`, req.body);
+      const currentRepo = await Repo.findOne({ _id: req.params.repoId });
+      const newRecipe = new Recipe({
+        title: req.body.title,
+        notes: req.body.notes,
+        ingredients: [req.body.ingredients],
+        instructions: [req.body.instructions],
+        userId: req.user._id,
+        repo: req.params.repoId,
+      });
 
-      //   const currentRepo = await Repo.findOne({ _id: req.body.repoId });
-      //   const newRecipe = new Recipe({
-      //     title: req.body.title,
-      //     notes: req.body.notes,
-      //     ingredients: [req.body.ingredients],
-      //     instructions: [req.body.instructions],
-      //     userId: req.user.id,
-      //     repo: req.body.repoId,
-      //   });
+      console.log(currentRepo);
+      const savedRecipe = await newRecipe.save();
+      await Repo.findOneAndUpdate(
+        { _id: req.params.repoId },
+        {
+          title: req.body.title,
+          description: req.body.description,
+          latest: currentRepo.latest + 1,
+          $push: { versions: savedRecipe._id },
+        }
+      );
 
-      //   // console.log(currentRepo)
-      //   const savedRecipe = await newRecipe.save();
-      //   await Repo.findOneAndUpdate(
-      //     { _id: req.body.repoId },
-      //     {
-      //       // description: req.body.description,
-      //       latest: currentRepo.latest + 1,
-      //       $push: { versions: savedRecipe._id },
-      //     }
-      //   );
-      //   console.log("Recipe updated");
-      //   res.redirect(`/${req.user.username}/${req.body.repoId}`);
-      res.status(200);
+      res.status(200).json({ message: "successfully updated recipe" });
     } catch (err) {
-      console.log(err);
+      console.error(err);
+      res.status(500).json({ message: "Something went wrong" });
     }
   },
 };
