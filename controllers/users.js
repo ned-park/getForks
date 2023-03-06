@@ -1,11 +1,10 @@
-import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import express from "express";
 const router = express.Router({ mergeParams: true });
 import User from "../models/User.js";
 
 const createToken = ({ id, username }) =>
-  jwt.sign({ username, id }, process.env.SECRET, { expiresIn: "1d" });
+  jwt.sign({ username, id }, process.env.SECRET, { expiresIn: "3d" });
 
 const userController = {
   signUp: async (req, res) => {
@@ -49,6 +48,13 @@ const userController = {
   getUsers: async (req, res) => {
     const users = await User.find({});
     res.json(users);
+  },
+  verifyToken: async (req, res) => {
+    try {
+      return res.status(200).json({ message: "valid token" });
+    } catch (err) {
+      return res.status(401).json({ message: "invalid token" });
+    }
   },
 };
 
