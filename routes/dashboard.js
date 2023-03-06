@@ -11,5 +11,6 @@ router.get("/:repoId", repoController.getRepo);
 router.post("/create", upload.single("file"), repoController.createNewRepo);
 router.delete("/:repoId", repoController.deleteRecipe);
 router.put("/:repoId", upload.single("file"), repoController.commitRecipe);
+router.post("/:repoId/fork", repoController.forkRepo);
 
 export default router;

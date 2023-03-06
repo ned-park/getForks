@@ -216,5 +216,62 @@ const repoController = {
       res.status(500).json({ message: "Something went wrong" });
     }
   },
+  forkRepo: async (req, res) => {
+    try {
+      const originalRepo = await Repo.findOne({ _id: req.params.repoId })
+        .populate("versions")
+        .populate("branches");
+      const recipes = await Recipe.find({ repo: req.params.repoId });
+
+      let versionsClone = recipes.map(
+        (recipe) =>
+          new Recipe({
+            title: recipe.title,
+            notes: recipe.notes,
+            ingredients: recipe.ingredients,
+            instructions: recipe.instructions,
+            userId: req.user._id,
+            clonedFrom: recipe.userId,
+          })
+      );
+
+      let newVersionsId = versionsClone.map((recipe) => recipe._id);
+
+      const newRepo = new Repo({
+        title: originalRepo.title,
+        description: originalRepo.description,
+        latest: originalRepo.latest,
+        userId: req.user._id,
+        versions: newVersionsId,
+        cloudinaryId: originalRepo.cloudinaryId,
+        image: originalRepo.image,
+        tags: [].concat(...originalRepo.tags),
+        branches: [], //eventually deep copy if branching implemented
+        forkedFrom: originalRepo._id,
+        display: true,
+      });
+
+      console.log("new Repo in progress...");
+      let promises = versionsClone.map((r) => {
+        console.log(r);
+        r.repo = newRepo._id;
+        return r.save();
+      });
+      let fulfilled = await Promise.all(promises);
+      const savedRepo = await newRepo.save();
+
+      await User.findOneAndUpdate(
+        { _id: req.user._id },
+        { $push: { repos: newRepo._id } }
+      );
+
+      console.log("Repo was cloned!");
+
+      res.status(201).json({ savedRepo });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: err.message });
+    }
+  },
 };
 export default repoController;
