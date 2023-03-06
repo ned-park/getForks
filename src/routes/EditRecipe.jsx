@@ -1,25 +1,18 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
 
-export default function EditRecipe({
-  recipeData,
-  stopEditing,
-  setImage,
-  setRecipe,
-}) {
+export default function EditRecipe({ recipeData, updateRecipe }) {
   const { recipeId } = useParams();
   const { user, username } = useAuthContext();
   const [file, setFile] = useState(null);
   const [formData, setFormData] = useState({
-    title: recipeData.repo.title,
-    description: recipeData.repo.description,
-    notes: recipeData.repo.versions[recipeData.repo.latest || 0].notes,
-    ingredients:
-      recipeData.repo.versions[recipeData.repo.latest || 0].ingredients,
-    instructions:
-      recipeData.repo.versions[recipeData.repo.latest || 0].instructions,
-    tags: recipeData.repo.tags,
+    title: recipeData.title,
+    description: recipeData.description,
+    notes: recipeData.versions[recipeData.latest || 0].notes,
+    ingredients: recipeData.versions[recipeData.latest || 0].ingredients,
+    instructions: recipeData.versions[recipeData.latest || 0].instructions,
+    tags: recipeData.tags,
   });
 
   const handleChange = (e) => {
@@ -44,7 +37,6 @@ export default function EditRecipe({
       data.append("file", file);
     }
 
-    console.log(`/api/${username}/${recipeId}`);
     fetch(`/api/${username}/${recipeId}`, {
       method: "put",
       headers: {
@@ -52,14 +44,12 @@ export default function EditRecipe({
       },
       body: data,
     })
-      .then((res) => {
-        if (res.ok) {
-          stopEditing();
-          window.location.reload();
-        }
+      .then((res) => res.json())
+      .then((data) => {
+        updateRecipe(data);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   };
 

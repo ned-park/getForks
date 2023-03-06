@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import DOMPurify from "dompurify";
 import { useAuthContext } from "../hooks/useAuthContext";
-import { NavLink, Outlet, useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import EditRecipe from "./EditRecipe";
 
@@ -24,13 +24,7 @@ export default function Recipe() {
       })
         .then((res) => res.json())
         .then((data) => {
-          setRecipe({ ...data });
-          setImage(
-            data.repo.image
-              ? [data.repo.image.slice(0, 49), data.repo.image.slice(62)]
-              : null
-          );
-          return data;
+          updateRecipe(data.repo);
         });
     };
 
@@ -38,6 +32,14 @@ export default function Recipe() {
       fetchRecipe();
     }
   }, [user]);
+
+  const updateRecipe = (data) => {
+    setEditing(false);
+    setRecipe({ ...data });
+    setImage(
+      data.image ? [data.image.slice(0, 49), data.image.slice(62)] : null
+    );
+  };
 
   const handleDelete = (e) => {
     setConfirm(false);
@@ -47,7 +49,6 @@ export default function Recipe() {
         Authorization: `Bearer ${user.token}`,
       },
     }).then((res) => {
-      console.log(res.json());
       navigate(`/${username}`);
     });
   };
@@ -84,7 +85,7 @@ export default function Recipe() {
       {recipe && !editing && (
         <main>
           <section>
-            {recipe && <h1>{recipe.repo.title}</h1>}
+            {recipe && <h1>{recipe.title}</h1>}
             {image && (
               <img
                 className=""
@@ -95,21 +96,21 @@ export default function Recipe() {
     	        ${image[0]}/f_auto,q_70,w_1024/${image[1]} 1024w,
     	        ${image[0]}/f_auto,q_70,w_1280/${image[1]} 1280w`}
                 src={`${image[0]}/f_auto,q_70,w_512/${image[1]}`}
-                alt={`User provided image of ${recipe.repo.title}`}
+                alt={`User provided image of ${recipe.title}`}
               />
             )}
           </section>
           <section>
-            {recipe.repo.description.length && (
+            {recipe.description.length && (
               <>
                 <h2>Description</h2>
-                <p>{recipe.repo.description}</p>
+                <p>{recipe.description}</p>
               </>
             )}
-            {recipe.repo.versions[recipe.repo.latest || 0].notes.length && (
+            {recipe.versions[recipe.latest || 0].notes.length && (
               <>
                 <h2>Notes</h2>
-                <p>{recipe.repo.versions[recipe.repo.latest || 0].notes}</p>
+                <p>{recipe.versions[recipe.latest || 0].notes}</p>
               </>
             )}
           </section>
@@ -118,7 +119,7 @@ export default function Recipe() {
             <div
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(
-                  recipe.repo.versions[recipe.repo.latest || 0].ingredients
+                  recipe.versions[recipe.latest || 0].ingredients
                 ),
               }}
             ></div>
@@ -128,7 +129,7 @@ export default function Recipe() {
             <div
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(
-                  recipe.repo.versions[recipe.repo.latest || 0].instructions
+                  recipe.versions[recipe.latest || 0].instructions
                 ),
               }}
             ></div>
@@ -136,12 +137,7 @@ export default function Recipe() {
         </main>
       )}
       {recipe && editing && (
-        <EditRecipe
-          recipeData={recipe}
-          stopEditing={() => setEditing(false)}
-          setImage={setImage}
-          setRecipe={setRecipe}
-        />
+        <EditRecipe recipeData={recipe} updateRecipe={updateRecipe} />
       )}
     </>
   );
