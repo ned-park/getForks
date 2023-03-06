@@ -136,7 +136,12 @@ export default function Recipe() {
         </main>
       )}
       {recipe && editing && (
-        <EditRecipe recipeData={recipe} stopEditing={() => setEditing(false)} />
+        <EditRecipe
+          recipeData={recipe}
+          stopEditing={() => setEditing(false)}
+          setImage={setImage}
+          setRecipe={setRecipe}
+        />
       )}
     </>
   );

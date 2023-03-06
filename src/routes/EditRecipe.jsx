@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
 
-export default function EditRecipe({ recipeData, stopEditing }) {
+export default function EditRecipe({
+  recipeData,
+  stopEditing,
+  setImage,
+  setRecipe,
+}) {
   const { recipeId } = useParams();
   const { user, username } = useAuthContext();
   const [file, setFile] = useState(null);
@@ -39,7 +44,6 @@ export default function EditRecipe({ recipeData, stopEditing }) {
       data.append("file", file);
     }
 
-    console.log({ data });
     console.log(`/api/${username}/${recipeId}`);
     fetch(`/api/${username}/${recipeId}`, {
       method: "put",
@@ -50,7 +54,8 @@ export default function EditRecipe({ recipeData, stopEditing }) {
     })
       .then((res) => {
         if (res.ok) {
-          navigate(`/${username}/${recipeId}`);
+          stopEditing();
+          window.location.reload();
         }
       })
       .catch((error) => {
