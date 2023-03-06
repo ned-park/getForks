@@ -23,11 +23,19 @@ export const AuthContextProvider = ({ children }) => {
     const user = JSON.parse(localStorage.getItem("user"));
 
     if (user) {
-      dispatch({ type: "LOGIN", payload: user });
+      fetch(`/api/verifytoken`, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      }).then((res) => {
+        if (res.ok) {
+          dispatch({ type: "LOGIN", payload: user });
+        } else {
+          dispatch({ type: "LOGOUT" });
+        }
+      });
     }
   }, []);
-
-  console.log("AuthContext state:", state);
 
   return (
     <AuthContext.Provider value={{ ...state, dispatch }}>
