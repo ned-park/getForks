@@ -251,25 +251,21 @@ const repoController = {
         display: true,
       });
 
-      console.log("new Repo in progress...");
       let promises = versionsClone.map((r) => {
-        console.log(r);
         r.repo = newRepo._id;
         return r.save();
       });
-      let fulfilled = await Promise.all(promises);
-      const savedRepo = await newRepo.save();
+      await Promise.all(promises);
+      await newRepo.save();
 
       await User.findOneAndUpdate(
         { _id: req.user._id },
         { $push: { repos: newRepo._id } }
       );
 
-      console.log("Repo was cloned!");
-
-      res.status(201).json({ savedRepo });
+      res.status(201).json({ repoId: newRepo._id });
     } catch (err) {
-      console.log(err);
+      console.error(err);
       res.status(500).json({ message: err.message });
     }
   },
