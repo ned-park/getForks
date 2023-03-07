@@ -26,7 +26,7 @@ export default function EditRecipe({ recipeData, updateRecipe }) {
     }
   };
 
-  const handleClick = (e) => {
+  const handleClick = async (e) => {
     e.preventDefault();
 
     const data = new FormData();
@@ -37,20 +37,16 @@ export default function EditRecipe({ recipeData, updateRecipe }) {
       data.append("file", file);
     }
 
-    fetch(`/api/${username}/${recipeId}`, {
+    const res = await fetch(`/api/${username}/${recipeId}`, {
       method: "put",
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
       body: data,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        updateRecipe(data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    });
+
+    const repo = await res.json();
+    updateRecipe(repo);
   };
 
   return (
