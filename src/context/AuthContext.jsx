@@ -22,18 +22,21 @@ export const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
 
-    if (user) {
-      fetch(`/api/verifytoken`, {
+    const validateToken = async () => {
+      const res = await fetch(`/api/verifytoken`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
-      }).then((res) => {
-        if (res.ok) {
-          dispatch({ type: "LOGIN", payload: user });
-        } else {
-          dispatch({ type: "LOGOUT" });
-        }
       });
+      if (res.ok) {
+        dispatch({ type: "LOGIN", payload: user });
+      } else {
+        dispatch({ type: "LOGOUT" });
+      }
+    };
+
+    if (user) {
+      validateToken();
     }
   }, []);
 

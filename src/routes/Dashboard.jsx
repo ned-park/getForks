@@ -11,16 +11,14 @@ export default function Dashboard() {
   const { user, username } = useAuthContext();
 
   useEffect(() => {
-    const fetchRepo = () => {
-      fetch(`/api/${userId}`, {
+    const fetchRepo = async () => {
+      const res = await fetch(`/api/${userId}`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setRepos([...data.repos]);
-        });
+      });
+      const data = await res.json();
+      setRepos([...data.repos]);
     };
 
     if (user && user.user) {

@@ -27,7 +27,7 @@ export default function NewRecipe() {
     }
   };
 
-  const handleClick = (e) => {
+  const handleClick = async (e) => {
     e.preventDefault();
     const data = new FormData();
     for (let name in formData) {
@@ -37,21 +37,16 @@ export default function NewRecipe() {
       data.append("file", file);
     }
 
-    fetch(`/api/${username}/create`, {
+    const res = await fetch(`/api/${username}/create`, {
       method: "post",
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
       body: data,
-    })
-      .then((res) => {
-        if (res.ok) {
-          navigate(`/${username}`);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    });
+    if (res.ok) {
+      navigate(`/${username}`);
+    }
   };
 
   return (

@@ -16,16 +16,14 @@ export default function Recipe() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchRecipe = () => {
-      fetch(`/api/${userId}/${recipeId}`, {
+    const fetchRecipe = async () => {
+      const res = await fetch(`/api/${userId}/${recipeId}`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          updateRecipe(data.repo);
-        });
+      });
+      const data = await res.json();
+      updateRecipe(data.repo);
     };
 
     if (user && user.user) {
@@ -54,16 +52,15 @@ export default function Recipe() {
     );
   };
 
-  const handleDelete = (e) => {
+  const handleDelete = async (e) => {
     setConfirm(false);
-    fetch(`/api/${username}/${recipeId}`, {
+    const res = await fetch(`/api/${username}/${recipeId}`, {
       method: "delete",
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
-    }).then((res) => {
-      navigate(`/${username}`);
     });
+    if (res.ok) navigate(`/${username}`);
   };
 
   return (
