@@ -6,7 +6,7 @@ import Header from "../components/Header";
 import EditRecipe from "./EditRecipe";
 
 export default function Recipe() {
-  const { recipeId } = useParams();
+  const { userId, recipeId } = useParams();
   const [recipe, setRecipe] = useState(null);
   const [image, setImage] = useState(null);
   const [confirm, setConfirm] = useState(false);
@@ -17,7 +17,7 @@ export default function Recipe() {
 
   useEffect(() => {
     const fetchRecipe = () => {
-      fetch(`/api/${username}/${recipeId}`, {
+      fetch(`/api/${userId}/${recipeId}`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -32,6 +32,19 @@ export default function Recipe() {
       fetchRecipe();
     }
   }, [user]);
+
+  const initiateFork = async (e) => {
+    const res = await fetch(`/api/${userId}/${recipeId}/fork`, {
+      method: "post",
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      navigate(`/${username}/${data.repoId}`);
+    }
+  };
 
   const updateRecipe = (data) => {
     setEditing(false);
@@ -56,25 +69,28 @@ export default function Recipe() {
   return (
     <>
       <Header />
-      {username && username == user.user.username && !confirm ? (
+      {username && userId == user.user.username && !confirm ? (
         <button onClick={() => setConfirm(true)} className="btn">
           Delete
         </button>
       ) : (
-        <span>
-          Are you sure?{" "}
-          <button onClick={handleDelete} style={{ cursor: "pointer" }}>
-            yes{" "}
-          </button>
-          <button
-            onClick={() => setConfirm(false)}
-            style={{ cursor: "pointer" }}
-          >
-            no{" "}
-          </button>
-        </span>
+        username &&
+        userId == user.user.username && (
+          <span>
+            Are you sure?{" "}
+            <button onClick={handleDelete} style={{ cursor: "pointer" }}>
+              yes{" "}
+            </button>
+            <button
+              onClick={() => setConfirm(false)}
+              style={{ cursor: "pointer" }}
+            >
+              no{" "}
+            </button>
+          </span>
+        )
       )}
-      {user && user.user && username == user.user.username && (
+      {user && user.user && username == userId && (
         <button
           onClick={() => setEditing((oldEditing) => !oldEditing)}
           className="btn"
@@ -82,6 +98,12 @@ export default function Recipe() {
           {!editing ? `Edit Recipe` : `Discard Changes`}
         </button>
       )}
+      {user && user.user && username != userId && (
+        <button onClick={initiateFork} className="btn">
+          Fork
+        </button>
+      )}
+
       {recipe && !editing && (
         <main>
           <section>
