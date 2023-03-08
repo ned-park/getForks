@@ -14,6 +14,7 @@ import Signup from "./routes/Signup";
 import Dashboard from "./routes/Dashboard";
 import Recipe from "./routes/Recipe";
 import NewRecipe from "./routes/NewRecipe";
+import Search from "./routes/Search";
 
 import "./index.css";
 
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
     path: "/:userId/create",
     loader: null,
     element: <NewRecipe />,
+  },
+  {
+    path: "search",
+    element: <Search />,
   },
 ]);
 
