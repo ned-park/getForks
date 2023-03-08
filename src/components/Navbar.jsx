@@ -17,8 +17,7 @@ export default function Navbar() {
 
   const handleSearchQuery = (e) => {
     e.preventDefault();
-
-    navigate(`/search?query=${query}`);
+    if (query.length > 0) navigate(`/search?query=${query}`);
   };
 
   return (
