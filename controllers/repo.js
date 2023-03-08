@@ -269,5 +269,36 @@ const repoController = {
       res.status(500).json({ message: err.message });
     }
   },
+  getQuery: async (req, res) => {
+    try {
+      const { page, limit } = {
+        page: parseInt(req.query.page) || 1,
+        limit: Number(req.query.limit) || 5,
+      };
+
+      const repos = await Repo.find({
+        $or: [
+          {
+            title: { $regex: req.query.query, $options: "i" },
+          },
+          { tags: { $regex: req.query.query, $options: "i" } },
+        ],
+      })
+        .limit(limit * 1)
+        .skip((page - 1) * limit)
+        .sort({ creationDate: -1 })
+        .populate("userId")
+        .lean();
+
+      res.status(200).json({
+        repos: repos,
+        page: page,
+        limit: limit,
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Your search could not be completed" });
+    }
+  },
 };
 export default repoController;
