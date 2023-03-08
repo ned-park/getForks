@@ -7,9 +7,6 @@ import mainRoutes from "./routes/main.js";
 import dashboardRoutes from "./routes/dashboard.js";
 import userRoutes from "./routes/user.js";
 
-// import session from "express-session"
-// import MongoStore from "connect-mongo"
-
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
@@ -31,26 +28,9 @@ try {
   process.exit(1);
 }
 
-// app.use(
-//   session({
-//     secret: process.env.SESSION_SECRET,
-//     resave: false,
-//     saveUninitialized: false,
-//     store: MongoStore.create({
-//       mongoUrl: process.env.MONGO_URI
-//     })
-//   })
-// )
-
 app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/api", mainRoutes);
-// app.use('/search', searchRoutes)
-// app.use('/about', aboutRoutes)
-// app.use('/comment', commentRoutes)
 app.use("/api/users", userRoutes);
 app.use("/api/:user", dashboardRoutes);
-
-// app.listen(PORT, ()=>{
-//   console.log(`Server is running on port: ${PORT}`)
-// })
