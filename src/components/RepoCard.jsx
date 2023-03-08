@@ -16,11 +16,18 @@ export default function RepoCard({ repo }) {
             />
           )}
           <div className="">
-            <NavLink to={`/${repo.username}/${repo._id}`}>
+            <NavLink
+              to={`/${repo.userId.username || repo.username}/${repo._id}`}
+            >
               <h5 className="">{repo.title}</h5>
             </NavLink>
-            <NavLink to={`/${repo.username}`} className="">
-              <span className="">More from {repo.username}</span>
+            <NavLink
+              to={`/${repo.userId.username || repo.username}`}
+              className=""
+            >
+              <span className="">
+                More from {repo.userId.username || repo.username}
+              </span>
             </NavLink>
             <div className="">
               {repo.description.length > 0 && (
