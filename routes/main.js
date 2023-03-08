@@ -6,6 +6,7 @@ import { requireAuth } from "../middleware/requireAuth.js";
 
 router.get("/", repoController.getIndex);
 router.get("/verifytoken", requireAuth, userController.verifyToken);
+router.get("/search", repoController.getQuery);
 router.post("/login", userController.login);
 router.post("/signup", userController.signUp);
 
