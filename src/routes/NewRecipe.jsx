@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
-import Header from "../components/Header";
 
 export default function NewRecipe() {
   const navigate = useNavigate();
@@ -51,7 +50,6 @@ export default function NewRecipe() {
 
   return (
     <>
-      <Header />
       <section className="">
         <h2 className="">Add Recipe</h2>
         <form onSubmit={handleClick} className="">
