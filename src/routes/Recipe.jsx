@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import DOMPurify from "dompurify";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useParams, useNavigate } from "react-router-dom";
-import Header from "../components/Header";
 import EditRecipe from "./EditRecipe";
 
 export default function Recipe() {
@@ -65,7 +64,6 @@ export default function Recipe() {
 
   return (
     <>
-      <Header />
       {username && userId == user.user.username && !confirm ? (
         <button onClick={() => setConfirm(true)} className="btn">
           Delete

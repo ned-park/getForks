@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { NavLink, useParams, useSearchParams } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
-import Header from "../components/Header";
 import RepoCard from "../components/RepoCard";
 
 export default function Search() {
@@ -24,7 +23,6 @@ export default function Search() {
 
   return (
     <main>
-      <Header />
       <section>
         <h1>Your search results</h1>
         {user && user.user && (
