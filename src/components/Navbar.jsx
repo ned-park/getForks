@@ -31,11 +31,11 @@ export default function Navbar({ setTheme }) {
   };
 
   return (
-    <nav>
+    <nav className="flex gap-4 text-primary items-center">
       <button onClick={(e) => setTheme(e)}>ToggleTheme</button>
-      <ul>
+      <ul className="flex items-center gap-4">
         {linksToDisplay.map(([name, destination]) => (
-          <li key={name}>
+          <li key={name} className="bg-primary">
             <NavLink
               to={destination}
               className={({ isActive }) =>
@@ -59,6 +59,7 @@ export default function Navbar({ setTheme }) {
               onChange={(e) => setQuery(e.target.value)}
               value={query}
               placeholder="Search"
+              className="bg-tertiary text-secondary p-1 rounded"
             />
           </form>
         </li>
