@@ -3,13 +3,23 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useLogout } from "../hooks/useLogout";
 import { useAuthContext } from "../hooks/useAuthContext";
 
-export default function Navbar() {
+export default function Navbar({ setTheme }) {
   const { user } = useAuthContext();
   const { logout } = useLogout();
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
 
-  let activeClassName = "underline";
+  let activeClassName = "text-accent";
+
+  const navItems = [
+    // link name, destination, condition on which to display
+    ["myRecipes", `/${user && user.user ? user.user.username : ""}`, user],
+    ["About", "/about", true],
+    ["Signup", "/signup", !user],
+    ["Login", "/login", !user],
+  ];
+
+  const linksToDisplay = navItems.filter((item) => item[2]);
 
   const handleLogout = () => {
     logout();
@@ -22,61 +32,20 @@ export default function Navbar() {
 
   return (
     <nav>
+      <button onClick={(e) => setTheme(e)}>ToggleTheme</button>
       <ul>
-        <li>
-          <NavLink
-            to={`/`}
-            className={({ isActive }) =>
-              isActive ? activeClassName : undefined
-            }
-          >
-            Home
-          </NavLink>
-        </li>
-        {user && user.user && (
-          <li>
+        {linksToDisplay.map(([name, destination]) => (
+          <li key={name}>
             <NavLink
-              to={`/${user.user.username}`}
+              to={destination}
               className={({ isActive }) =>
                 isActive ? activeClassName : undefined
               }
             >
-              myRecipes
+              {name}
             </NavLink>
           </li>
-        )}
-        <li>
-          <NavLink
-            to="/about"
-            className={({ isActive }) =>
-              isActive ? activeClassName : undefined
-            }
-          >
-            About
-          </NavLink>
-        </li>
-        {!user && (
-          <>
-            <li>
-              <NavLink to="/login">
-                {({ isActive }) => (
-                  <span className={isActive ? activeClassName : undefined}>
-                    Login
-                  </span>
-                )}
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/signup">
-                {({ isActive }) => (
-                  <span className={isActive ? activeClassName : undefined}>
-                    Signup
-                  </span>
-                )}
-              </NavLink>
-            </li>
-          </>
-        )}
+        ))}
         {user && (
           <li>
             <button onClick={handleLogout}>Logout</button>
