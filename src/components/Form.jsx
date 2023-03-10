@@ -22,9 +22,13 @@ export default function RecipeForm({
           type={type}
           name={name}
           id={name}
-          placeholder={placeholder + `${!required ? " (optional)" : ""}`}
+          placeholder={
+            type === "text" && formData[name]
+              ? formData[name]
+              : placeholder + `${!required ? " (optional)" : ""}`
+          }
           onChange={type !== "submit" ? onChange : null}
-          value={type === "text" ? formData[{ name }] : undefined}
+          value={type === "text" ? formData[name] : undefined}
           required={required}
           className={styles[elementType]}
         />
@@ -35,9 +39,13 @@ export default function RecipeForm({
           type={type}
           name={name}
           id={name}
-          placeholder={placeholder + `${!required ? " (optional)" : ""}`}
+          placeholder={
+            type === "text" && formData[name]
+              ? formData[name]
+              : placeholder + `${!required ? " (optional)" : ""}`
+          }
           onChange={type !== "submit" ? onChange : null}
-          value={type === "text" ? formData[{ name }] : null}
+          value={type === "text" ? formData[name] : null}
           required={required}
           className={styles[elementType]}
         />
@@ -51,7 +59,9 @@ export default function RecipeForm({
     <form onSubmit={handleClick} className="">
       {formItems.map((item) => (
         <div key={item.name} className="flex flex-row gap-4 mb-4">
-          <label htmlFor={item.name}>{item.placeholder}</label>
+          <label htmlFor={item.name}>
+            {item.name[0].toUpperCase() + item.name.slice(1).toLowerCase()}
+          </label>
           {generateElement(
             item.elementType,
             item.type,
