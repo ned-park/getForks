@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
 import Form from "../components/Form";
@@ -53,11 +53,14 @@ export default function NewRecipe() {
   };
 
   return (
-    <Form
-      formData={formData}
-      formItems={recipeFormItems}
-      handleChange={handleChange}
-      handleClick={handleClick}
-    />
+    <section className="shadow-xl mt-24 m-auto container flex flex-col">
+      <h2 className="text-xl font-bold text-center">Add Recipe</h2>
+      <Form
+        formData={formData}
+        formItems={recipeFormItems}
+        handleChange={handleChange}
+        handleClick={handleClick}
+      />
+    </section>
   );
 }
