@@ -48,27 +48,22 @@ export default function RecipeForm({
   };
 
   return (
-    <>
-      <section className="shadow-xl mt-24 m-auto container flex flex-col">
-        <h2 className="text-xl font-bold text-center">Add Recipe</h2>
-        <form onSubmit={handleClick} className="">
-          {formItems.map((item) => (
-            <div key={item.name} className="flex flex-row gap-4 mb-4">
-              <label htmlFor={item.name}>{item.placeholder}</label>
-              {generateElement(
-                item.elementType,
-                item.type,
-                item.name,
-                item.placeholder,
-                item.required,
-                handleChange,
-                handleClick
-              )}
-            </div>
-          ))}
-          <button>Create</button>
-        </form>
-      </section>
-    </>
+    <form onSubmit={handleClick} className="">
+      {formItems.map((item) => (
+        <div key={item.name} className="flex flex-row gap-4 mb-4">
+          <label htmlFor={item.name}>{item.placeholder}</label>
+          {generateElement(
+            item.elementType,
+            item.type,
+            item.name,
+            item.placeholder,
+            item.required,
+            handleChange,
+            handleClick
+          )}
+        </div>
+      ))}
+      <button>Create</button>
+    </form>
   );
 }
