@@ -1,0 +1,51 @@
+export const recipeFormItems = [
+  {
+    name: "title",
+    type: "text",
+    placeholder: "Title",
+    elementType: "input",
+    required: true,
+  },
+  {
+    name: "description",
+    type: "text",
+    placeholder: "Description",
+    elementType: "input",
+    required: false,
+  },
+  {
+    name: "notes",
+    type: "text",
+    placeholder: "Notes",
+    elementType: "input",
+    required: false,
+  },
+  {
+    name: "ingredients",
+    type: "text",
+    placeholder: "Ingredients",
+    elementType: "textarea",
+    required: true,
+  },
+  {
+    name: "instructions",
+    type: "text",
+    placeholder: "Instructions",
+    elementType: "textarea",
+    required: true,
+  },
+  {
+    name: "tags",
+    type: "text",
+    placeholder: "Space separated tags",
+    elementType: "input",
+    required: false,
+  },
+  {
+    name: "file",
+    type: "file",
+    placeholder: "Image",
+    elementType: "input",
+    required: false,
+  },
+];
