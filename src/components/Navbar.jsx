@@ -59,7 +59,7 @@ export default function Navbar({ setTheme }) {
               onChange={(e) => setQuery(e.target.value)}
               value={query}
               placeholder="Search"
-              className="bg-tertiary text-secondary p-1 rounded"
+              className="bg-tertiary text-secondary p-1 px-2 rounded"
             />
           </form>
         </li>
