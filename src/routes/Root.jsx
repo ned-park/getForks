@@ -34,7 +34,7 @@ export default function Root() {
 
   return (
     <>
-      <Header setTheme={handleThemeChange} />
+      <Header setTheme={handleThemeChange} theme={theme} />
       <Outlet />
     </>
   );

@@ -24,4 +24,12 @@
     --text-tertiary: 255, 255, 255;
     --text-accent: 50, 200, 255;
   }
+
+  .sun {
+    fill: rgb(200, 200, 200);
+  }
+
+  .moon {
+    fill: rgb(50, 50, 50);
+  }
 }
