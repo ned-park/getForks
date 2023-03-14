@@ -32,6 +32,7 @@ export default function Login() {
         formData={formData}
         formItems={loginFormItems}
       />
+      {error && <div className="error">{error}</div>}
     </section>
   );
 }
