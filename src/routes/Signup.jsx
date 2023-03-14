@@ -1,37 +1,40 @@
 import { useState } from "react";
 import { useSignup } from "../hooks/useSignup";
+import { signupFormItems } from "../components-data/SignupForm";
+import Form from "../components/Form";
 
 export default function Signup() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    confirmPassword: "",
+  });
+
   const { signup, error, isLoading } = useSignup();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    // console.log({username}, {password})
+  const handleChange = (event) => {
+    setFormData((oldFormData) => ({
+      ...oldFormData,
+      [event.target.name]: event.target.value,
+    }));
+  };
 
-    await signup(username, password);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    await signup(formData.username, formData.password);
   };
 
   return (
-    <form className="signup" onSubmit={handleSubmit}>
-      <h2>Sign up</h2>
-      <label htmlFor="username">Username: </label>
-      <input
-        type="type"
-        name="username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
+    <section className="shadow-xl mt-24 m-auto container flex flex-col">
+      <h2 className="text-xl font-bold text-center">Signup</h2>
+      <Form
+        handleClick={handleSubmit}
+        handleChange={handleChange}
+        formData={formData}
+        formItems={signupFormItems}
       />
-      <label htmlFor="password">Password: </label>
-      <input
-        type="password"
-        name="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button disabled={isLoading}>Sign up</button>
       {error && <div className="error">{error}</div>}
-    </form>
+    </section>
   );
 }
