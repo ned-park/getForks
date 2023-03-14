@@ -1,37 +1,37 @@
 import React, { useState } from "react";
 import { useLogin } from "../hooks/useLogin";
+import { loginFormItems } from "../components-data/LoginForm";
+import Form from "../components/Form";
 
 export default function Login() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+  });
+
   const { login, error, isLoading } = useLogin();
+
+  const handleChange = (event) => {
+    setFormData((oldFormData) => ({
+      ...oldFormData,
+      [event.target.name]: event.target.value,
+    }));
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await login(username, password);
+    await login(formData.username, formData.password);
   };
 
   return (
-    <form className="login" onSubmit={handleSubmit}>
-      <h2>Login</h2>
-      <label htmlFor="username"> Username:</label>
-      <input
-        name="username"
-        type="text"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
+    <section className="shadow-xl mt-24 m-auto container flex flex-col">
+      <h2 className="text-xl font-bold text-center">Login</h2>
+      <Form
+        handleClick={handleSubmit}
+        handleChange={handleChange}
+        formData={formData}
+        formItems={loginFormItems}
       />
-      <label htmlFor="password">Password:</label>
-      <input
-        name="password"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button type="submit" disabled={isLoading}>
-        Submit
-      </button>
-      {error && <div className="error">{error}</div>}
-    </form>
+    </section>
   );
 }

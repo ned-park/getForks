@@ -23,12 +23,14 @@ export default function RecipeForm({
           name={name}
           id={name}
           placeholder={
-            type === "text" && formData[name]
+            type !== "submit" && type !== "file" && formData[name]
               ? formData[name]
               : placeholder + `${!required ? " (optional)" : ""}`
           }
           onChange={type !== "submit" ? onChange : null}
-          value={type === "text" ? formData[name] : undefined}
+          value={
+            type !== "submit" && type !== "file" ? formData[name] : undefined
+          }
           required={required}
           className={styles[elementType]}
         />
