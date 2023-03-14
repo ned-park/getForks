@@ -33,6 +33,7 @@ export default function Signup() {
         handleChange={handleChange}
         formData={formData}
         formItems={signupFormItems}
+        submitText="Signup"
       />
       {error && <div className="error">{error}</div>}
     </section>

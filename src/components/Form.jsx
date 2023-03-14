@@ -1,6 +1,7 @@
 export default function RecipeForm({
   formData,
   formItems,
+  submitText,
   handleChange,
   handleClick,
 }) {
@@ -75,7 +76,7 @@ export default function RecipeForm({
           )}
         </div>
       ))}
-      <button>Create</button>
+      <button>{submitText}</button>
     </form>
   );
 }

@@ -31,6 +31,7 @@ export default function Login() {
         handleChange={handleChange}
         formData={formData}
         formItems={loginFormItems}
+        submitText="Login"
       />
       {error && <div className="error">{error}</div>}
     </section>

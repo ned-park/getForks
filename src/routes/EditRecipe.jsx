@@ -62,6 +62,7 @@ export default function EditRecipe({ recipeData, updateRecipe }) {
             formItems={recipeFormItems}
             handleChange={handleChange}
             handleClick={handleClick}
+            submitText="Update Recipe"
           />
         )}
       </section>

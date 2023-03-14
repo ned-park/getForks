@@ -60,6 +60,7 @@ export default function NewRecipe() {
         formItems={recipeFormItems}
         handleChange={handleChange}
         handleClick={handleClick}
+        submitText="Create Recipe"
       />
     </section>
   );
