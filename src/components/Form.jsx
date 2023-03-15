@@ -63,7 +63,8 @@ export default function RecipeForm({
       {formItems.map((item) => (
         <div key={item.name} className="flex flex-row gap-4 mb-4">
           <label htmlFor={item.name}>
-            {item.name[0].toUpperCase() + item.name.slice(1).toLowerCase()}
+            {item.placeholder[0].toUpperCase() +
+              item.placeholder.slice(1).toLowerCase()}
           </label>
           {generateElement(
             item.elementType,
