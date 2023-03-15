@@ -16,11 +16,11 @@
 
   .dark {
     --bg-primary: 50, 50, 50;
-    --bg-secondary: 245, 246, 247;
+    --bg-secondary: 100, 100, 100;
     --bg-tertiary: 238, 238, 238;
 
     --text-primary: 200, 200, 200;
-    --text-secondary: 56, 63, 74;
+    --text-secondary: 225, 225, 225;
     --text-tertiary: 255, 255, 255;
     --text-accent: 50, 200, 255;
   }
