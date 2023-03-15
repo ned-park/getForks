@@ -22,16 +22,18 @@ export default function Search() {
   }, [searchParams]);
 
   return (
-    <main>
+    <main className="bg-secondary text-secondary mx-auto pt-12 px-4 lg:px-8 pb-20">
       <section>
-        <h1>Your search results</h1>
+        <h1 className="text-xl font-bold text-center lg:text-left pb-8">
+          Your search results
+        </h1>
         {user && user.user && (
           <NavLink to={`/${user.user.username}/create`} className="btn">
             New Recipe
           </NavLink>
         )}
       </section>
-      <section>
+      <section className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 md:grid-flow-row lg:grid-cols-3">
         {repos.length < 1 && <p>No results found for your query.</p>}
         {repos.map((repo) => (
           <RepoCard repo={repo} key={repo._id} />
