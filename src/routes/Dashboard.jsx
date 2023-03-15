@@ -24,19 +24,21 @@ export default function Dashboard() {
     if (user && user.user) {
       fetchRepo();
     }
-  }, [user]);
+  }, [user, userId]);
 
   return (
-    <main>
+    <main className="mx-auto lg:max-w-6xl pt-12">
       <section>
-        <h1>{`${userId}'s`} Recipes</h1>
+        <h1 className="text-xl font-bold text-center lg:text-left pb-16">
+          {`${userId}'s`} Recipes
+        </h1>
         {user && user.user && (
           <NavLink to={`/${user.user.username}/create`} className="btn">
             New Recipe
           </NavLink>
         )}
       </section>
-      <section>
+      <section className="flex flex-col gap-6">
         {repos.map((repo) => (
           <RepoCard repo={repo} key={repo._id} />
         ))}
