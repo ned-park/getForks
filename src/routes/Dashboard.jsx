@@ -27,9 +27,9 @@ export default function Dashboard() {
   }, [user, userId]);
 
   return (
-    <main className="mx-auto lg:max-w-6xl pt-12">
+    <main className="bg-secondary text-secondary mx-auto pt-12 px-4 lg:px-8 pb-20">
       <section>
-        <h1 className="text-xl font-bold text-center lg:text-left pb-16">
+        <h1 className="text-xl font-bold text-center lg:text-left pb-8">
           {`${userId}'s`} Recipes
         </h1>
         {user && user.user && (
@@ -38,7 +38,7 @@ export default function Dashboard() {
           </NavLink>
         )}
       </section>
-      <section className="flex flex-col gap-6">
+      <section className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 md:grid-flow-row lg:grid-cols-3">
         {repos.map((repo) => (
           <RepoCard repo={repo} key={repo._id} />
         ))}
