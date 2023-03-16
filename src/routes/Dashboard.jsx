@@ -28,12 +28,15 @@ export default function Dashboard() {
 
   return (
     <main className="bg-secondary text-secondary mx-auto pt-12 px-4 lg:px-8 pb-20">
-      <section>
-        <h1 className="text-xl font-bold text-center lg:text-left pb-8">
+      <section className="flex justify-between items-center mb-8">
+        <h1 className="text-xl font-bold text-center lg:text-left">
           {`${userId}'s`} Recipes
         </h1>
         {user && user.user && (
-          <NavLink to={`/${user.user.username}/create`} className="btn">
+          <NavLink
+            to={`/${user.user.username}/create`}
+            className="bg-tertiary text-tertiary rounded px-5 py-2 shadow shadow-gray-500 border border-gray-200"
+          >
             New Recipe
           </NavLink>
         )}
