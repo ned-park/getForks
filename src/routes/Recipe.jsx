@@ -63,49 +63,53 @@ export default function Recipe() {
   };
 
   return (
-    <>
-      {username && userId == user.user.username && !confirm ? (
-        <button onClick={() => setConfirm(true)} className="btn">
-          Delete
-        </button>
-      ) : (
-        username &&
-        userId == user.user.username && (
-          <span>
-            Are you sure?{" "}
-            <button onClick={handleDelete} style={{ cursor: "pointer" }}>
-              yes{" "}
-            </button>
-            <button
-              onClick={() => setConfirm(false)}
-              style={{ cursor: "pointer" }}
-            >
-              no{" "}
-            </button>
-          </span>
-        )
-      )}
-      {user && user.user && username == userId && (
-        <button
-          onClick={() => setEditing((oldEditing) => !oldEditing)}
-          className="btn"
-        >
-          {!editing ? `Edit Recipe` : `Discard Changes`}
-        </button>
-      )}
-      {user && user.user && username != userId && (
-        <button onClick={initiateFork} className="btn">
-          Fork
-        </button>
-      )}
+    <main className="bg-secondary text-secondary mx-auto pt-12 px-4 md:px-16 lg:px-64 pb-20">
+      <div className="flex justify-between">
+        {username && userId == user.user.username && !confirm ? (
+          <button onClick={() => setConfirm(true)} className="btn">
+            Delete
+          </button>
+        ) : (
+          username &&
+          userId == user.user.username && (
+            <span>
+              Are you sure?{" "}
+              <button onClick={handleDelete} style={{ cursor: "pointer" }}>
+                Yes&nbsp;
+              </button>
+              <button
+                onClick={() => setConfirm(false)}
+                style={{ cursor: "pointer" }}
+              >
+                No{" "}
+              </button>
+            </span>
+          )
+        )}
+        {user && user.user && username == userId && (
+          <button
+            onClick={() => setEditing((oldEditing) => !oldEditing)}
+            className="btn"
+          >
+            {!editing ? `Edit Recipe` : `Discard Changes`}
+          </button>
+        )}
+        {user && user.user && username != userId && (
+          <button onClick={initiateFork} className="btn">
+            Fork
+          </button>
+        )}
+      </div>
 
       {recipe && !editing && (
-        <main>
+        <article>
           <section>
-            {recipe && <h1>{recipe.title}</h1>}
+            {recipe && (
+              <h1 className="font-bold text-xl text-center">{recipe.title}</h1>
+            )}
             {image && (
               <img
-                className=""
+                className="mx-auto my-8 max-w-md h-auto"
                 sizes="(min-width: 30em) 50em, 28em, 100vw"
                 srcSet={`${image[0]}/f_auto,q_70,w_256/${image[1]} 256w,
     	        ${image[0]}/f_auto,q_70,w_512/${image[1]} 512w,
@@ -117,22 +121,22 @@ export default function Recipe() {
               />
             )}
           </section>
-          <section>
+          <section className="mb-6">
             {recipe.description.length && (
               <>
-                <h2>Description</h2>
-                <p>{recipe.description}</p>
+                <h2 className="font-bold text-lg">Description</h2>
+                <p className="mb-6">{recipe.description}</p>
               </>
             )}
             {recipe.versions[recipe.latest || 0].notes.length && (
               <>
-                <h2>Notes</h2>
+                <h2 className="font-bold text-lg">Notes</h2>
                 <p>{recipe.versions[recipe.latest || 0].notes}</p>
               </>
             )}
           </section>
-          <section>
-            <h2>Ingredients</h2>
+          <section className="mb-6 max-w-[60rem] ">
+            <h2 className="font-bold text-lg">Ingredients</h2>
             <div
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(
@@ -141,9 +145,10 @@ export default function Recipe() {
               }}
             ></div>
           </section>
-          <section>
-            <h2>Instructions</h2>
+          <section className="mb-6 max-w-[60rem]">
+            <h2 className="font-bold text-lg">Instructions</h2>
             <div
+              className="flex gap-8"
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(
                   recipe.versions[recipe.latest || 0].instructions
@@ -151,11 +156,19 @@ export default function Recipe() {
               }}
             ></div>
           </section>
-        </main>
+        </article>
       )}
       {recipe && editing && (
         <EditRecipe recipeData={recipe} updateRecipe={updateRecipe} />
       )}
-    </>
+      <style>{`
+        ol > li {
+          padding-bottom: 12px;
+        }
+        ul > li {
+          padding-bottom: 6px;
+        }
+      `}</style>
+    </main>
   );
 }
