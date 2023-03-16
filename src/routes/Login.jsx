@@ -24,8 +24,8 @@ export default function Login() {
   };
 
   return (
-    <section className="shadow-xl mt-24 m-auto container flex flex-col">
-      <h2 className="text-xl font-bold text-center">Login</h2>
+    <section className="mt-24 mx-auto container flex flex-col px-2">
+      <h2 className="text-xl font-bold text-center mb-6">Login</h2>
       <Form
         handleClick={handleSubmit}
         handleChange={handleChange}

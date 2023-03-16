@@ -6,7 +6,10 @@ export default function RecipeForm({
   handleClick,
 }) {
   const styles = {
-    input: "bg-tertiary text-secondary p-1 px-2 rounded",
+    input:
+      "bg-secondary text-secondary p-1 px-2 rounded shadow shadow-gray-500 appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline",
+    textarea:
+      "bg-secondary text-secondary p-1 px-2 rounded shadow shadow-gray-500 appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline",
   };
 
   const generateElement = (
@@ -59,10 +62,13 @@ export default function RecipeForm({
   };
 
   return (
-    <form onSubmit={handleClick} className="">
+    <form
+      onSubmit={handleClick}
+      className="bg-tertiary text-tertiary shadow-md shadow-gray-400 rounded px-8 pt-6 pb-8 mb-4"
+    >
       {formItems.map((item) => (
-        <div key={item.name} className="flex flex-row gap-4 mb-4">
-          <label htmlFor={item.name}>
+        <div key={item.name} className="mb-6">
+          <label htmlFor={item.name} className="block text-sm font-bold mb-2">
             {item.placeholder[0].toUpperCase() +
               item.placeholder.slice(1).toLowerCase()}
           </label>
@@ -77,7 +83,11 @@ export default function RecipeForm({
           )}
         </div>
       ))}
-      <button>{submitText}</button>
+      <div className="w-full flex justify-center">
+        <button className="mx-auto bg-secondary text-secondary rounded px-5 py-2 shadow shadow-gray-500">
+          {submitText}
+        </button>
+      </div>
     </form>
   );
 }
