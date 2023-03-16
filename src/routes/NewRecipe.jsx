@@ -53,8 +53,8 @@ export default function NewRecipe() {
   };
 
   return (
-    <section className="shadow-xl mt-24 m-auto container flex flex-col">
-      <h2 className="text-xl font-bold text-center">Add Recipe</h2>
+    <section className="mt-24 m-auto container flex flex-col px-2">
+      <h2 className="text-xl font-bold text-center mb-6">Add Recipe</h2>
       <Form
         formData={formData}
         formItems={recipeFormItems}

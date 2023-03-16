@@ -54,8 +54,8 @@ export default function EditRecipe({ recipeData, updateRecipe }) {
 
   return (
     <>
-      <section className="">
-        <h2 className="">Update Recipe</h2>
+      <section className="mt-12 m-auto container flex flex-col">
+        <h2 className="text-xl font-bold text-center mb-6">Update Recipe</h2>
         {formData && formData.title.length > 0 && (
           <Form
             formData={formData}
