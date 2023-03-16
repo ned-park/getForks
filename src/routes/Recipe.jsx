@@ -66,7 +66,10 @@ export default function Recipe() {
     <main className="bg-secondary text-secondary mx-auto pt-12 px-4 md:px-16 lg:px-64 pb-20">
       <div className="flex justify-between">
         {username && userId == user.user.username && !confirm ? (
-          <button onClick={() => setConfirm(true)} className="btn">
+          <button
+            onClick={() => setConfirm(true)}
+            className="bg-secondary text-secondary rounded px-5 py-2 shadow shadow-gray-500 border border-gray-200"
+          >
             Delete
           </button>
         ) : (
@@ -74,12 +77,17 @@ export default function Recipe() {
           userId == user.user.username && (
             <span>
               Are you sure?{" "}
-              <button onClick={handleDelete} style={{ cursor: "pointer" }}>
+              <button
+                onClick={handleDelete}
+                style={{ cursor: "pointer" }}
+                className="bg-secondary text-secondary rounded px-5 py-2 shadow shadow-gray-500 border border-gray-200"
+              >
                 Yes&nbsp;
               </button>
               <button
                 onClick={() => setConfirm(false)}
                 style={{ cursor: "pointer" }}
+                className="ml-4 bg-secondary text-secondary rounded px-5 py-2 shadow shadow-gray-500 border border-gray-200"
               >
                 No{" "}
               </button>
@@ -89,13 +97,16 @@ export default function Recipe() {
         {user && user.user && username == userId && (
           <button
             onClick={() => setEditing((oldEditing) => !oldEditing)}
-            className="btn"
+            className="bg-secondary text-secondary rounded px-5 py-2 shadow shadow-gray-500 border border-gray-200"
           >
             {!editing ? `Edit Recipe` : `Discard Changes`}
           </button>
         )}
         {user && user.user && username != userId && (
-          <button onClick={initiateFork} className="btn">
+          <button
+            onClick={initiateFork}
+            className="bg-secondary text-secondary rounded px-5 py-2 shadow shadow-gray-500 border border-gray-200"
+          >
             Fork
           </button>
         )}

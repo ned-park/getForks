@@ -84,7 +84,7 @@ export default function RecipeForm({
         </div>
       ))}
       <div className="w-full flex justify-center">
-        <button className="mx-auto bg-secondary text-secondary rounded px-5 py-2 shadow shadow-gray-500">
+        <button className="mx-auto bg-secondary text-secondary rounded px-5 py-2 shadow shadow-gray-500 border border-gray-200 ">
           {submitText}
         </button>
       </div>
