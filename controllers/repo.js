@@ -6,6 +6,8 @@ import express from "express";
 import cloudinary from "../middleware/cloudinary.js";
 const router = express.Router({ mergeParams: true });
 
+const repoDisplayLimit = 6;
+
 const getTokenFrom = (request) => {
   const authorization = request.get("authorization");
   if (authorization && authorization.startsWith("Bearer ")) {
@@ -25,7 +27,7 @@ const repoController = {
   getIndex: async (req, res) => {
     const { page, limit } = {
       page: +req.query.page || 1,
-      limit: +req.query.limit || 5,
+      limit: +req.query.limit || repoDisplayLimit,
     };
     try {
       let repos = await (
@@ -273,7 +275,7 @@ const repoController = {
     try {
       const { page, limit } = {
         page: parseInt(req.query.page) || 1,
-        limit: Number(req.query.limit) || 5,
+        limit: Number(req.query.limit) || repoDisplayLimit,
       };
 
       const repos = await Repo.find({
