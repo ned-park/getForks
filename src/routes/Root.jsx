@@ -33,9 +33,9 @@ export default function Root() {
   };
 
   return (
-    <>
+    <div className="min-h-screen bg-primary text-primary">
       <Header setTheme={handleThemeChange} theme={theme} />
       <Outlet />
-    </>
+    </div>
   );
 }

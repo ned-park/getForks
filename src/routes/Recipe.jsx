@@ -113,14 +113,14 @@ export default function Recipe() {
       </div>
 
       {recipe && !editing && (
-        <article>
+        <article className="mx-auto p-2 container">
           <section>
             {recipe && (
               <h1 className="font-bold text-xl text-center">{recipe.title}</h1>
             )}
             {image && (
               <img
-                className="mx-auto my-8 max-w-md h-auto"
+                className="mx-auto my-8 max-w-2xs md:max-w-md h-auto rounded"
                 sizes="(min-width: 30em) 50em, 28em, 100vw"
                 srcSet={`${image[0]}/f_auto,q_70,w_256/${image[1]} 256w,
     	        ${image[0]}/f_auto,q_70,w_512/${image[1]} 512w,
