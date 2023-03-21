@@ -4,7 +4,9 @@ import placeholder from "../assets/lukas-blazek-f-TWhXOrLiU-unsplash.jpg";
 export default function RepoCard({ repo }) {
   return (
     <section className="bg-primary text-primary flex flex-col rounded-lg max-w-[726px] shadow-xl">
-      <NavLink to={`/${repo.userId.username || repo.username}/${repo._id}`}>
+      <NavLink
+        to={`/${repo.userId.username || repo.username}/${repo._id || repo.id}`}
+      >
         {" "}
         <img
           className="object-fill w-full rounded-t-lg"
@@ -14,7 +16,11 @@ export default function RepoCard({ repo }) {
         />
       </NavLink>
       <div className="flex flex-col justify-between p-4 flex-start">
-        <NavLink to={`/${repo.userId.username || repo.username}/${repo._id}`}>
+        <NavLink
+          to={`/${repo.userId.username || repo.username}/${
+            repo._id || repo.id
+          }`}
+        >
           <div className="">
             <h5 className="text-center font-bold mt-2 text-2xl">
               {repo.title}
