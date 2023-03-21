@@ -2,8 +2,8 @@ import "../about.css";
 
 export default function About() {
   return (
-    <main className="about">
-      <div className="container about--grid">
+    <main className="container px-2 bg-secondary">
+      <div className="container">
         <div className="about--intro">
           <h1>How it started</h1>
           <p>

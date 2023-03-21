@@ -1,22 +1,24 @@
 import { NavLink } from "react-router-dom";
+import placeholder from "../assets/lukas-blazek-f-TWhXOrLiU-unsplash.jpg";
 
 export default function RepoCard({ repo }) {
   return (
-    <section className="bg-primary text-primary flex flex-col border border-gray-200 rounded-lg shadow max-w-[726px]">
+    <section className="bg-primary text-primary flex flex-col rounded-lg max-w-[726px] shadow-xl">
       <NavLink to={`/${repo.userId.username || repo.username}/${repo._id}`}>
-        {repo.image && (
-          <img
-            className="object-fill w-full rounded-t-lg"
-            /* prettier-ignore */
-            src={`${repo.image.slice(0,49)}/f_auto,q_90,c_fill,h_200,w_750/${repo.image.slice(62)}`}
-            alt={`${repo.description}`}
-          />
-        )}
+        {" "}
+        <img
+          className="object-fill w-full rounded-t-lg"
+          /* prettier-ignore */
+          src={repo.image? `${repo.image.slice(0,49)}/f_auto,q_90,c_fill,h_600,w_750/${repo.image.slice(62)}` : placeholder}
+          alt={`${repo.description}`}
+        />
       </NavLink>
       <div className="flex flex-col justify-between p-4 flex-start">
         <NavLink to={`/${repo.userId.username || repo.username}/${repo._id}`}>
           <div className="">
-            <h5 className="text-center font-bold mt-2">{repo.title}</h5>
+            <h5 className="text-center font-bold mt-2 text-2xl">
+              {repo.title}
+            </h5>
             <div className="mt-4 mb-auto">
               {repo.description.length > 0 && (
                 <span className="text-sm">
