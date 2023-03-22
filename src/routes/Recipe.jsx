@@ -10,6 +10,7 @@ export default function Recipe() {
   const [image, setImage] = useState(null);
   const [confirm, setConfirm] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [version, setVersion] = useState(0);
 
   const { user, username } = useAuthContext();
   const navigate = useNavigate();
@@ -49,8 +50,10 @@ export default function Recipe() {
     setImage(
       data.image ? [data.image.slice(0, 49), data.image.slice(62)] : null
     );
+    setVersion(data.latest);
   };
 
+  console.log({ version });
   const handleDelete = async (e) => {
     setConfirm(false);
     const res = await fetch(`/api/${username}/${recipeId}`, {
@@ -65,47 +68,66 @@ export default function Recipe() {
   return (
     <main className="bg-secondary text-secondary mx-auto pt-12 px-4 md:px-16 lg:px-64 pb-20">
       <div className="flex justify-between">
-        {username && userId == user.user.username && !confirm ? (
-          <button
-            onClick={() => setConfirm(true)}
-            className="bg-secondary text-secondary rounded px-5 py-2 shadow shadow-gray-500 border border-gray-200"
-          >
-            Delete
-          </button>
-        ) : (
-          username &&
-          userId == user.user.username && (
-            <span>
-              Are you sure?{" "}
-              <button
-                onClick={handleDelete}
-                style={{ cursor: "pointer" }}
-                className="bg-secondary text-secondary rounded px-5 py-2 shadow shadow-gray-500 border border-gray-200"
-              >
-                Yes&nbsp;
-              </button>
-              <button
-                onClick={() => setConfirm(false)}
-                style={{ cursor: "pointer" }}
-                className="ml-4 bg-secondary text-secondary rounded px-5 py-2 shadow shadow-gray-500 border border-gray-200"
-              >
-                No{" "}
-              </button>
-            </span>
-          )
-        )}
-        {user && user.user && username == userId && (
-          <button
-            onClick={() => setEditing((oldEditing) => !oldEditing)}
-            className="bg-secondary text-secondary rounded px-5 py-2 shadow shadow-gray-500 border border-gray-200"
-          >
-            {!editing ? `Edit Recipe` : `Discard Changes`}
-          </button>
-        )}
+        <div className="flex flex-col gap-2 md:flex-row">
+          {user && user.user && username == userId && (
+            <button
+              onClick={() => setEditing((oldEditing) => !oldEditing)}
+              className="bg-primary text-primary rounded px-5 py-2 shadow shadow-gray-500"
+            >
+              {!editing ? `Edit Recipe` : `Discard Changes`}
+            </button>
+          )}
+          {username && userId == user.user.username && !confirm ? (
+            <button
+              onClick={() => setConfirm(true)}
+              className="bg-primary text-primary rounded px-5 py-2 shadow shadow-gray-500"
+            >
+              Delete
+            </button>
+          ) : (
+            username &&
+            userId == user.user.username && (
+              <span>
+                <button
+                  onClick={handleDelete}
+                  style={{ cursor: "pointer" }}
+                  className="bg-primary text-primary rounded px-5 py-2 shadow shadow-gray-500"
+                >
+                  Confirm&nbsp;
+                </button>
+                <button
+                  onClick={() => setConfirm(false)}
+                  style={{ cursor: "pointer" }}
+                  className="ml-4 bg-primary text-primary rounded px-5 py-2 shadow shadow-gray-500"
+                >
+                  Cancel{" "}
+                </button>
+              </span>
+            )
+          )}
+        </div>
+        <div className="flex flex-col gap-2 items-center md:flex-row">
+          <label htmlFor="version">Version:</label>
+          {recipe && (
+            <select
+              defaultValue={version}
+              onChange={(e) => setVersion(e.target.value)}
+              className="bg-primary text-primary rounded p-2"
+              name="version"
+              id="version"
+            >
+              {recipe.versions.map((v, i) => (
+                <option value={i} key={i}>
+                  {i}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
         {user && user.user && username != userId && (
           <button
             onClick={initiateFork}
-            className="bg-secondary text-secondary rounded px-5 py-2 shadow shadow-gray-500 border border-gray-200"
+            className="bg-primary text-primary rounded px-5 py-2 shadow shadow-gray-500"
           >
             Fork
           </button>
@@ -116,7 +138,9 @@ export default function Recipe() {
         <article className="mx-auto p-2 container">
           <section>
             {recipe && (
-              <h1 className="font-bold text-xl text-center">{recipe.title}</h1>
+              <h1 className="mt-8 font-bold text-3xl text-center">
+                {recipe.title}
+              </h1>
             )}
             {image && (
               <img
@@ -139,10 +163,10 @@ export default function Recipe() {
                 <p className="mb-6">{recipe.description}</p>
               </>
             )}
-            {recipe.versions[recipe.latest || 0].notes.length && (
+            {recipe.versions[version].notes.length && (
               <>
                 <h2 className="font-bold text-lg">Notes</h2>
-                <p>{recipe.versions[recipe.latest || 0].notes}</p>
+                <p>{recipe.versions[version].notes}</p>
               </>
             )}
           </section>
@@ -151,7 +175,7 @@ export default function Recipe() {
             <div
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(
-                  recipe.versions[recipe.latest || 0].ingredients
+                  recipe.versions[version].ingredients
                 ),
               }}
             ></div>
@@ -162,7 +186,7 @@ export default function Recipe() {
               className="flex gap-8"
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(
-                  recipe.versions[recipe.latest || 0].instructions
+                  recipe.versions[version].instructions
                 ),
               }}
             ></div>
