@@ -53,7 +53,6 @@ export default function Recipe() {
     setVersion(data.latest);
   };
 
-  console.log({ version });
   const handleDelete = async (e) => {
     setConfirm(false);
     const res = await fetch(`/api/${username}/${recipeId}`, {
