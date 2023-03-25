@@ -13,6 +13,7 @@ export default function Recipe() {
   const [confirm, setConfirm] = useState(false);
   const [editing, setEditing] = useState(false);
   const [version, setVersion] = useState(0);
+  const [submitted, setSubmitted] = useState(0);
 
   const { user, username } = useAuthContext();
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ export default function Recipe() {
     if (user && user.user) {
       fetchRecipe();
     }
-  }, [user]);
+  }, [user, submitted]);
 
   const initiateFork = async (e) => {
     const res = await fetch(`/api/${userId}/${recipeId}/fork`, {
@@ -47,11 +48,15 @@ export default function Recipe() {
   };
 
   const updateRecipe = (data) => {
-    setEditing(false);
     setRecipe({ ...data });
     setImage(
       data.image ? [data.image.slice(0, 49), data.image.slice(62)] : null
     );
+    if (editing) {
+      setSubmitted((oldCount) => oldCount + 1);
+      setVersion(data.latest + 1);
+      setEditing(false);
+    }
     setVersion(data.latest);
   };
 
@@ -111,7 +116,7 @@ export default function Recipe() {
           <label htmlFor="version">Version:</label>
           {recipe && (
             <select
-              defaultValue={version}
+              value={version}
               onChange={(e) => setVersion(e.target.value)}
               className="bg-primary text-primary rounded p-2"
               name="version"
