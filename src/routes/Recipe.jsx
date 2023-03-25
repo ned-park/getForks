@@ -3,6 +3,8 @@ import DOMPurify from "dompurify";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useParams, useNavigate } from "react-router-dom";
 import EditRecipe from "./EditRecipe";
+import reactMarkdown from "react-markdown";
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 
 export default function Recipe() {
   const { userId, recipeId } = useParams();
@@ -122,15 +124,15 @@ export default function Recipe() {
               ))}
             </select>
           )}
+          {user && user.user && username != userId && (
+            <button
+              onClick={initiateFork}
+              className="bg-primary text-primary rounded px-5 py-2 shadow shadow-gray-500"
+            >
+              Fork
+            </button>
+          )}
         </div>
-        {user && user.user && username != userId && (
-          <button
-            onClick={initiateFork}
-            className="bg-primary text-primary rounded px-5 py-2 shadow shadow-gray-500"
-          >
-            Fork
-          </button>
-        )}
       </div>
 
       {recipe && !editing && (
@@ -171,24 +173,15 @@ export default function Recipe() {
           </section>
           <section className="mb-6 max-w-[60rem] ">
             <h2 className="font-bold text-lg">Ingredients</h2>
-            <div
-              dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(
-                  recipe.versions[version].ingredients
-                ),
-              }}
-            ></div>
+            <ReactMarkdown>
+              {recipe.versions[version].ingredients[0]}
+            </ReactMarkdown>
           </section>
           <section className="mb-6 max-w-[60rem]">
             <h2 className="font-bold text-lg">Instructions</h2>
-            <div
-              className="flex gap-8"
-              dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(
-                  recipe.versions[version].instructions
-                ),
-              }}
-            ></div>
+            <ReactMarkdown>
+              {recipe.versions[version].instructions[0]}
+            </ReactMarkdown>
           </section>
         </article>
       )}
