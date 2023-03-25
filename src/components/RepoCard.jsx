@@ -1,11 +1,18 @@
 import { NavLink } from "react-router-dom";
 import placeholder from "../assets/lukas-blazek-f-TWhXOrLiU-unsplash.jpg";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 export default function RepoCard({ repo }) {
+  const { user, username } = useAuthContext();
+
   return (
     <section className="bg-primary text-primary flex flex-col rounded-lg max-w-[726px] shadow-xl">
       <NavLink
-        to={`/${repo.userId.username || repo.username}/${repo._id || repo.id}`}
+        to={
+          user
+            ? `/${repo.userId.username || repo.username}/${repo._id || repo.id}`
+            : `/login`
+        }
       >
         {" "}
         <img
@@ -17,9 +24,13 @@ export default function RepoCard({ repo }) {
       </NavLink>
       <div className="flex flex-col justify-between p-4 flex-start">
         <NavLink
-          to={`/${repo.userId.username || repo.username}/${
-            repo._id || repo.id
-          }`}
+          to={
+            user
+              ? `/${repo.userId.username || repo.username}/${
+                  repo._id || repo.id
+                }`
+              : `/login`
+          }
         >
           <div className="">
             <h5 className="text-center font-bold mt-2 text-2xl">
@@ -36,7 +47,15 @@ export default function RepoCard({ repo }) {
         </NavLink>
       </div>
       <div className="pl-4 pb-4 mt-auto text-xs md:text-sm justify-self-end">
-        <NavLink to={`/${repo.userId.username || repo.username}`}>
+        <NavLink
+          to={
+            user
+              ? `/${repo.userId.username || repo.username}/${
+                  repo._id || repo.id
+                }`
+              : `/login`
+          }
+        >
           <span className="">By {repo.userId.username || repo.username}</span>
         </NavLink>
       </div>
