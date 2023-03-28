@@ -1,3 +1,4 @@
+import aboutImage from "../assets/about.jpg";
 import "../about.css";
 
 export default function About() {
@@ -18,8 +19,9 @@ export default function About() {
           </div>
           <div className="about--img">
             <img
-              src="https://placekitten.com/1280/800"
-              alt="chickpeas, veggies, and couscous"
+              src={aboutImage}
+              alt="A Banh mi sandwich"
+              className="rounded"
             />
           </div>
         </section>
@@ -53,10 +55,10 @@ export default function About() {
                   Easily fork recipes to save and modify
                 </h3>
                 <p>
-                  Simply click the Ψ symbol on a recipe to clone the repository
-                  enabling you to save, find, and modify it as desired later on.
-                  This copy remains there, even if the original is changed or
-                  deleted later on.
+                  Simply click the Fork button on a recipe to clone the
+                  repository enabling you to save, find, and modify it as
+                  desired later on. This copy remains there, even if the
+                  original is changed or deleted later on.
                 </p>
               </li>
               <li>
