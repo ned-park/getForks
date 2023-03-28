@@ -296,6 +296,7 @@ const repoController = {
         repos: repos,
         page: page,
         limit: limit,
+        query: req.query.query,
       });
     } catch (err) {
       console.error(err);
