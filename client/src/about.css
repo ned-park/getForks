@@ -1,0 +1,36 @@
+.about--grid {
+  padding-top: 4rem;
+  height: 100%;
+  display: grid;
+  grid-gap: 2rem;
+  grid-template: 2 / 2;
+  grid-template-areas:
+    "b i"
+    "a l"; 
+}
+
+.about--blurb {
+  grid-area: b;
+}
+
+.about--img {
+  grid-area: i;
+}
+
+.about img {
+  max-width: 100%;
+  max-height: auto;
+}
+
+.about--approach {
+  grid-area: a;
+}
+
+.about--list {
+  grid-area: l;
+}
+
+
+ol {
+  padding: 1rem;
+}

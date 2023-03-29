@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-primary: 230, 230, 230;
+    --bg-secondary: 245, 246, 247;
+    --bg-tertiary: 238, 238, 238;
+
+    --text-primary: 50, 50, 50;
+    --text-secondary: 56, 63, 74;
+    --text-tertiary: 17, 17, 17;
+    --text-accent: 0, 50, 255;
+  }
+
+  .dark {
+    --bg-primary: 50, 50, 50;
+    --bg-secondary: 100, 100, 100;
+    --bg-tertiary: 75, 75, 75;
+
+    --text-primary: 200, 200, 200;
+    --text-secondary: 225, 225, 225;
+    --text-tertiary: 255, 255, 255;
+    --text-accent: 50, 200, 255;
+  }
+
+  .sun {
+    fill: rgb(200, 200, 200);
+  }
+
+  .moon {
+    fill: rgb(50, 50, 50);
+  }
+}
