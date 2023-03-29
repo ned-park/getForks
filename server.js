@@ -25,9 +25,6 @@ try {
     useUnifiedTopology: true,
   });
 
-  // stuff
-  if (process.env.NODE_ENV === "production") {
-  }
   app.listen(PORT, () => {
     console.log(`Server is running on port: ${PORT}`);
   });
@@ -49,6 +46,10 @@ app.use("/api", mainRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/:user", dashboardRoutes);
 
+var htmlPath = path.join(path.join(__dirname, "client", "dist"));
+app.use(express.static(htmlPath));
+
 app.get("*", (req, res) => {
+  console.log(req.body);
   res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
 });
