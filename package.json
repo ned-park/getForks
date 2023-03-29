@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "npm run start",
+    "start": "node server.js",
     "client": "npm run dev --prefix client",
-    "server": "nodemon index.js",
+    "server": "nodemon server.js",
     "build": "npm install && npm install --prefix client && npm run build --prefix client",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "concurrently \"npm run server\" \"npm run client\""
