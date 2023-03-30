@@ -38,18 +38,11 @@ try {
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "client", "dist")));
-}
-
 app.use("/api", mainRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/:user", dashboardRoutes);
 
-var htmlPath = path.join(path.join(__dirname, "client", "dist"));
-app.use(express.static(htmlPath));
-
-app.get("*", (req, res) => {
-  console.log(req.body);
-  res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
-});
+if (process.env.NODE_ENV === "production") {
+  const htmlPath = path.join(path.join(__dirname, "client", "dist"));
+  app.use(express.static(htmlPath));
+}
