@@ -22,6 +22,8 @@ export default function Index() {
       setRepos(data.repos);
       setPage(data.page);
       setLimit(data.limit);
+      if (data)
+        setLoaded(true);
     };
 
     fetchRepo();
@@ -46,12 +48,21 @@ export default function Index() {
         {repos.length > 0 ? (
           repos.map((repo) => <RepoCard repo={repo} key={repo.id} />)
         ) : (
+          {loaded} ? (
           <p>
             There's nothing left to find.{" "}
             <NavLink to="/" onClick={() => setPage(1)}>
               Return home
             </NavLink>
           </p>
+        ) : (
+          <p>
+            Content is coming, using free tiers means things take a few seconds to spin up the first time.{" "}
+            <NavLink to="/" onClick={() => setPage(1)}>
+              Return home
+            </NavLink>
+          </p>
+        )
         )}
       </section>
       {
