@@ -25,16 +25,14 @@ try {
     useUnifiedTopology: true,
   });
 
-  if (conn) {
-    app.listen(PORT, () => {
-      console.log(`Server is running on port: ${PORT}`);
-    });
-  }
-
   console.log(`MongoDB Connected: ${conn.connection.host}`);
 } catch (err) {
   console.error(err);
   process.exit(1);
+} finally {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port: ${PORT}`);
+  });
 }
 
 app.use(bodyParser.json());
