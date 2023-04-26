@@ -48,21 +48,9 @@ export default function Index() {
         {repos.length > 0 ? (
           repos.map((repo) => <RepoCard repo={repo} key={repo.id} />)
         ) : (
-          {loaded} ? (
           <p>
-            There's nothing left to find.{" "}
-            <NavLink to="/" onClick={() => setPage(1)}>
-              Return home
-            </NavLink>
+            Content is coming, using free tiers means things take a bit of time to spin up.
           </p>
-        ) : (
-          <p>
-            Content is coming, using free tiers means things take a few seconds to spin up the first time.{" "}
-            <NavLink to="/" onClick={() => setPage(1)}>
-              Return home
-            </NavLink>
-          </p>
-        )
         )}
       </section>
       {
