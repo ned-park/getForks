@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLoaderData } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
 import RepoCard from "../components/RepoCard";
 
 export default function Index() {
-  let [repos, setRepos] = useState([]);
-  let [loaded, setLoaded] = useState(false);
-  let [page, setPage] = useState(null);
-  let [limit, setLimit] = useState(null);
+  const data = useLoaderData();
+  let [repos, setRepos] = useState(data.repos);
+  let [loaded, setLoaded] = useState(true);
+  let [page, setPage] = useState(data.page);
+  let [limit, setLimit] = useState(data.limit);
 
   const { user, username } = useAuthContext();
+
+
 
   useEffect(() => {
     let url = `/api/`;

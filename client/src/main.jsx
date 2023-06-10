@@ -23,6 +23,12 @@ const router = createBrowserRouter([
       {
         path: "/",
         index: true,
+        loader: async () => {
+          let url = `/api/`;
+          const res = await fetch(url);
+          const data = await res.json();
+          return data;
+        },
         element: <Index />,
       },
       {
