@@ -23,8 +23,11 @@ const router = createBrowserRouter([
       {
         path: "/",
         index: true,
-        loader: async () => {
+        loader: async ({ params }) => {
           let url = `/api/`;
+          if (params.page) {
+              url = `/api/?page=${params.page}&limit=${params.limit}`;
+          }
           const res = await fetch(url);
           const data = await res.json();
           return data;

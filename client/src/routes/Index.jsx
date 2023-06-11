@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { NavLink, useLoaderData } from "react-router-dom";
+import { NavLink, useLoaderData, useLocation } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
 import RepoCard from "../components/RepoCard";
 
@@ -8,11 +8,17 @@ export default function Index() {
   let [repos, setRepos] = useState(data.repos);
   let [loaded, setLoaded] = useState(true);
   let [page, setPage] = useState(data.page);
-  let [limit, setLimit] = useState(data.limit);
+  let [limit, setLimit] = useState(data.limit || 6);
 
   const { user, username } = useAuthContext();
+  const location = useLocation();
 
-
+  if (`?page=${page}&limit=${limit}` !== location.search && location.search !== "") {
+    let [pg, lim] = location.search.match(/\d+/);
+    setPage(pg);
+  } else if (location.search === "" && page != 1) {
+    setPage(1)
+  }
 
   useEffect(() => {
     let url = `/api/`;
@@ -52,7 +58,13 @@ export default function Index() {
           repos.map((repo) => <RepoCard repo={repo} key={repo.id} />)
         ) : (
           <p>
-            Content is coming, using free tiers means things take a bit of time to spin up.
+            That's all we have, return 
+            <NavLink
+            to={`/?page=${1}&limit=${limit || 6}`}
+            onClick={() => setPage((oldPage) => oldPage + 1)}
+            className="pl-2 font-bold text-secondary"
+          >Home
+          </NavLink>?
           </p>
         )}
       </section>
